@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webscraper_API", "Webscraper_API\Webscraper_API.csproj", "{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EF Core Console", "EF Core Console\EF Core Console.csproj", "{67EDB072-4136-46DA-8516-70739B115A09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67EDB072-4136-46DA-8516-70739B115A09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67EDB072-4136-46DA-8516-70739B115A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67EDB072-4136-46DA-8516-70739B115A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67EDB072-4136-46DA-8516-70739B115A09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAD16D17-B4E0-4402-B0FD-E04091464334}
+	EndGlobalSection
+EndGlobal
