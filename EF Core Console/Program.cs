@@ -5,6 +5,7 @@ using Webscraper_API.Scraper.Crunchyroll.Controllers;
 using Webscraper_API.Scraper.Honda.Controllers;
 using Webscraper_API.Scraper.IMDB.Controllers;
 using Webscraper_API.Scraper.Pokemons.Controller;
+using Webscraper_API.Scraper.TCG_Magic.Controller;
 using Webscraper_API.Scraper.TCG_Pokemon.Controller;
 
 IConfiguration conf;
@@ -24,17 +25,19 @@ var host = Host.CreateDefaultBuilder()
     .ConfigureServices((context, service) =>
     {
         service.AddSingleton<Browser>();
-        service.AddTransient<ICR_API, CR_API>();
-        service.AddTransient<IIMDb_API, IMDb_API>();
-        service.AddTransient<IPokemon_API, Pokemon_API>();
-        service.AddTransient<ITCG_API, TCG_API>();
-        service.AddTransient<IHonda_Api, Honda_Api>();
+        service.AddScoped<ICR_API, CR_API>();
+        service.AddScoped<IIMDb_API, IMDb_API>();
+        service.AddScoped<IPokemon_API, Pokemon_API>();
+        service.AddScoped<ITCG_API, TCG_API>();
+        service.AddScoped<IHonda_Api, Honda_Api>();
+        service.AddScoped<TCG_M_API>();
 
-        service.AddTransient<ICrunchyrollController, CrunchyrollController>();
-        service.AddTransient<IIMDbController, IMDbController>();
-        service.AddTransient<IPokemonController, PokemonController>();
-        service.AddTransient<IPokemonCardController, PokemonCardController>();
-        service.AddTransient <IHondaPartsController, HondaPartsController>();
+        service.AddScoped<ICrunchyrollController, CrunchyrollController>();
+        service.AddScoped<IIMDbController, IMDbController>();
+        service.AddScoped<IPokemonController, PokemonController>();
+        service.AddScoped<IPokemonCardController, PokemonCardController>();
+        service.AddScoped <IHondaPartsController, HondaPartsController>();
+        service.AddScoped<MagicController>();
 
         service.AddDbContext<CrunchyrollDBContext>(options => options.UseSqlServer(conf.GetConnectionString("Crunchyroll")));
         service.AddDbContext<ImdbDBContext>(options => options.UseSqlServer(conf.GetConnectionString("IMDB")));

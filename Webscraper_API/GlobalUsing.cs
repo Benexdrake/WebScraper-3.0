@@ -25,6 +25,11 @@ global using OpenQA.Selenium;
 global using OpenQA.Selenium.Firefox;
 
 global using Serilog;
-global using System.Globalization;
-global using System.Text.RegularExpressions;
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Reflection;
+global using System.Threading.Tasks;
+
+global using Microsoft.Extensions.DependencyInjection;
 

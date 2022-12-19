@@ -42,7 +42,7 @@ namespace Webscraper_API.Scraper.Crunchyroll.BuildModels
             anime.ImageUrl = url;
             return this;
         }
-        public AnimeBuilder Rating(string rating)
+        public AnimeBuilder Rating(double rating)
         {
             anime.Rating = rating;
             return this;
@@ -55,11 +55,6 @@ namespace Webscraper_API.Scraper.Crunchyroll.BuildModels
         public AnimeBuilder Publisher(string pub)
         {
             anime.Publisher = pub;
-            return this;
-        }
-        public AnimeBuilder LastUpdate()
-        {
-            anime.LastUpdate = DateTime.Now;
             return this;
         }
 

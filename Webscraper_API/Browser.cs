@@ -1,4 +1,7 @@
-﻿namespace Webscraper_API;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+
+namespace Webscraper_API;
 public class Browser
 {
     public WebDriver WebDriver { get; set; }
@@ -13,7 +16,6 @@ public class Browser
         options.AddArgument("--headless");
         options.AddArgument("--enable-precise-memory-info");
         options.AddArgument("--disable-popup-blocking");
-        options.AddArgument("--enable-precise-memory-info");
         options.AddArgument("--blink-settings=imagesEnabled=false");
         options.AddArgument("--enable-javascript");
         options.AddArgument("--block-new-web-contents");
@@ -33,6 +35,7 @@ public class Browser
         WebDriver.Navigate().GoToUrl(url);
         var hondaButton = WebDriver.FindElements(By.ClassName("fit-vehicle-list-view-text")).FirstOrDefault();
 
+
         if (hondaButton is not null)
         {
             hondaButton.Click();
@@ -40,6 +43,7 @@ public class Browser
         await Task.Delay(delay);
 
         string page = ReplaceString(WebDriver.PageSource);
+        //string page = WebDriver.PageSource;
         var doc = new HtmlDocument();
         doc.LoadHtml(page);
         return doc;

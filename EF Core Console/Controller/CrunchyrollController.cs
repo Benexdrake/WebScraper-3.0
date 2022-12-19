@@ -1,4 +1,6 @@
-﻿namespace EF_Core_Console.Controller;
+﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
+namespace EF_Core_Console.Controller;
 public class CrunchyrollController : ICrunchyrollController
 {
     private readonly Browser _browser;
@@ -26,6 +28,19 @@ public class CrunchyrollController : ICrunchyrollController
         }
     }
 
+
+    private void SaveEpisodes(Episode episode)
+    {
+        _context.Episodes.Add(episode);
+        _context.SaveChanges();
+    }
+
+    private void UpdateAnime(Anime anime, Anime aDb)
+    {
+        //aDb.Episodes = anime.Episodes;
+        _context.SaveChanges();
+    }
+
     public async Task FullUpdateAnimes()
     {
         var urls = GetUrls().Result;
@@ -38,10 +53,19 @@ public class CrunchyrollController : ICrunchyrollController
                 var a = _context.Animes.Where(a => a.Url.Equals(url)).FirstOrDefault();
                 if (a is null)
                 {
-                    var doc = _browser.GetPageDocument(url, 2000).Result;
-                    var anime = _api.GetAnimeByUrlAsync(url, doc).Result;
-                    if (anime is not null)
-                        SaveAnime(anime);
+                    var AE = _api.GetAnimewithEpisodes(url, 2000).Result;
+                    if (AE is not null)
+                    {
+                        SaveAnime(AE.Anime);
+                        foreach (var e in AE.Episodes)
+                        {
+                            var episode = _context.Episodes.Where(a => a.Id.Equals(e.Id)).FirstOrDefault();
+                            if(episode is null)
+                            {
+                                SaveEpisodes(e);
+                            }
+                        }
+                    }
                 }
                 var percent = Helper.Percent(i, urls.Length);
                 Log.Logger.Information($"Animes found: {percent}%/100%");
@@ -58,17 +82,69 @@ public class CrunchyrollController : ICrunchyrollController
         }
     }
 
+    public async Task SimulcastUpdate()
+    {
+        var urls = _api.GetSimulcastUpdateUrlsAsync().Result;
+        //var animes = _context.Animes.ToList();
+
+        var updateList = new List<Anime>();
+
+        try
+        {
+            int i = 0;
+            foreach (var url in urls)
+            {
+                i++;
+                var anime = _api.GetAnimeByUrlAsync(url, 2000).Result;
+                
+                var percent = Helper.Percent(i, urls.Length);
+                var a = _context.Animes.Where(a => a.Url.Equals(url)).FirstOrDefault();
+                if (anime is not null)
+                {
+                    if (a is null)
+                    {
+                        SaveAnime(anime);
+                        Log.Logger.Information($">>> Insert: Animes found: {percent}%/100%");
+                        Log.Logger.Information(url);
+                    }
+                    else
+                    {
+                        UpdateAnime(anime, a);
+                        Log.Logger.Information($">>> Update: Animes found: {percent}%/100%");
+                        Log.Logger.Information(url);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Error(e.Message);
+        }
+        finally
+        {
+            _browser.CloseDriver();
+        }
+    }
+
     private async Task<string[]> GetUrls()
     {
-        return _api.GetAnimeUrlList(_browser.WebDriver).Result;
+        return _api.GetAllAnimeUrlsAsync().Result;
     }
 
     public async Task Debug(string url)
     {
-        _browser.WebDriver = _browser.FirefoxDebug();
-        var doc = _browser.GetPageDocument(url, 2000).Result;
-        var anime = _api.GetAnimeByUrlAsync(url, doc).Result;
-        Console.WriteLine(anime.Name);
+        //var anime = _api.GetAnimeByUrlAsync(url, 2000).Result;
+        //var episodes = _api.GetEpisodes(url, 2000).Result;
+        //Console.WriteLine(anime.Name);
+        //SaveAnime(anime);
+
+        var animeEpisode = _api.GetAnimewithEpisodes(url, 2000).Result;
+        Console.WriteLine();
+        SaveAnime(animeEpisode.Anime);
+
+        //SaveEpisodes(animeEpisode.Episodes);
+
+
         Console.WriteLine();
     }
 }
