@@ -28,14 +28,14 @@ public class Main : IHostedService
         // Crunchyroll Debug with Url
 
 
-        //await _crunchyrollController.Debug("https://www.crunchyroll.com/de/series/GR75Q020Y/boruto-naruto-next-generations");
+        await _crunchyrollController.Debug("https://www.crunchyroll.com/de/series/GVDHX8QNW/chainsaw-man");
 
 
         //await _crunchyrollController.SimulcastUpdate();
 
         // Crunchyroll Full Update
 
-        await _crunchyrollController.FullUpdateAnimes();
+        //await _crunchyrollController.FullUpdateAnimes();
 
         // Imdb Single Movie with Url
         //await _iMDbController.GetMovie("https://www.imdb.com/title/tt0111161/?pf_rd_m=A2FGELUUNOQJNL&pf_rd_p=1a264172-ae11-42e4-8ef7-7fed1973bb8f&pf_rd_r=EM96Y0SFDRWBXVN0VKHQ&pf_rd_s=center-1&pf_rd_t=15506&pf_rd_i=top&ref_=chttp_tt_1");

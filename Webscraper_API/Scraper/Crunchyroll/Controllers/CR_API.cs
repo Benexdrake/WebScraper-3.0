@@ -7,6 +7,9 @@ public class CR_API : ICR_API
     private readonly IServiceProvider _service;
     private readonly Browser _browser;
 
+    public string Message { get; set; }
+    public int Episodes { get; set; }
+
     public CR_API(IServiceProvider service)
     {
         _service = service;
@@ -16,36 +19,55 @@ public class CR_API : ICR_API
     #region Update: Full and Simulcast
     public async Task<string[]> GetAllAnimeUrlsAsync()
     {
-        string url = "https://www.crunchyroll.com/de/videos/alphabetical?group=all";
+
+        // New with other Site
         List<string> urls = new();
+        Message = "0%/100%";
+        string url = "https://www.crunchyroll.com/de/videos/new";
         _browser.WebDriver.Navigate().GoToUrl(url);
+        await Task.Delay(5000);
 
-        await Task.Delay(1000);
+        int end = 5000;
 
-        int end = 4000;
 
-        for (int i = 0; i < end; i += 50)
+        // browsen bis nach unten in gaaanz schnell
+        for (int i = 0; i < end; i+=100)
         {
-            var page = _browser.WebDriver.PageSource;
-
-            var doc = new HtmlDocument();
-            doc.LoadHtml(page);
-
-            var main = Helper.FindNodesByDocument(doc, "div", "class", "ReactVirtualized__Grid__innerScrollContainer").Result.FirstOrDefault();
-
-            var list = Helper.FindNodesByNode(main, "a", "class", "horizontal-card-static__link--").Result;
-
-            foreach (var item in list)
-            {
-                var newurl = item.OuterHtml.Split('"')[7];
-
-                urls.Add("https://www.crunchyroll.com" + newurl);
-            }
             var percent = Helper.Percent(i, end);
-            Log.Logger.Information($"URLs found: {percent}%/100%");
+            Message = $"URLs found: {percent}%/100%";
+            Log.Logger.Information(Message);
             _browser.WebDriver.ExecuteScript($"window.scrollBy(0, {i});");
-            await Task.Delay(2000);
+            await Task.Delay(1000);
         }
+
+        var page = _browser.WebDriver.PageSource;
+
+        var doc = new HtmlDocument();
+        doc.LoadHtml(page);
+
+        await Task.Delay(5000);
+
+        var main = Helper.FindNodesByDocument(doc, "div", "class", "content-wrapper--MF5LS").Result.FirstOrDefault();
+
+        if(main is not null)
+        {
+            var collection = Helper.FindNodesByDocument(doc, "div", "class", "erc-browse-cards-collecti").Result;
+            // Collection == 3
+
+            foreach (var c in collection)
+            {
+                var browseCards = Helper.FindNodesByNode(c, "div", "class", "browse-card-static--UqkrO").Result;
+                foreach (var card in browseCards)
+                {
+                    var split = card.InnerHtml.Split('"');
+
+                    var u = "https://www.crunchyroll.com" + split[7];
+                    urls.Add(u);
+                }
+            }
+        }
+       
+        Message = $"URLs found: 100%/100%";
         var dis = urls.Distinct().ToList();
         return dis.ToArray();
     }
@@ -59,6 +81,28 @@ public class CR_API : ICR_API
         var doc = _browser.GetPageDocument(url, 5000).Result;
 
         var main = Helper.FindNodesByDocument(doc, "div", "class", "erc-browse-collection").Result.FirstOrDefault();
+
+        var browsecards = Helper.FindNodesByNode(main, "div", "class", "browse-card-static--UqkrO").Result;
+
+        foreach (var item in browsecards)
+        {
+            var split = item.InnerHtml.Split('"');
+
+            var u = "https://www.crunchyroll.com" + split[7];
+            urls.Add(u);
+        }
+        return urls.ToArray();
+    }
+
+    public async Task<string[]> GetDailyUpdateAsync()
+    {
+        string url = "https://www.crunchyroll.com/de/videos/new";
+        List<string> urls = new();
+        _browser.WebDriver.Navigate().GoToUrl(url);
+
+        var doc = _browser.GetPageDocument(url, 5000).Result;
+
+        var main = Helper.FindNodesByDocument(doc, "div", "class", "browse-collection-wrapper").Result.FirstOrDefault();
 
         var browsecards = Helper.FindNodesByNode(main, "div", "class", "browse-card-static--UqkrO").Result;
 
@@ -100,7 +144,6 @@ public class CR_API : ICR_API
         return null;
     }
 
-
     public async Task<Anime_Episodes> GetAnimewithEpisodes(string url, int time)
     {
         var doc = _browser.GetPageDocument(url, time).Result;
@@ -110,7 +153,10 @@ public class CR_API : ICR_API
 
         if (main is not null)
         {
-            var episodes = GetEpisodes().Result;
+            var episodeCount = Helper.FindNodesByNode(main, "span", "class", "text--gq6o- text--is-m--pqiL- meta-tags__tag--W4JTZ").Result.FirstOrDefault();
+
+            var episodes = new List<Episode>();
+
             var anime = builder
                         .a
                         .NewAnime()
@@ -122,16 +168,16 @@ public class CR_API : ICR_API
                         .Rating(GetRating(main))
                         .Tags(GetTags(main))
                         .Publisher(GetPublisher(main))
-                        .Episodes(episodes.Length)
+                        .Episodes(int.Parse(episodeCount.InnerText.Replace(" Videos","").Replace(" Video","").Replace(".","")))
                         .GetAnime();
 
+            if(Episodes != anime.Episodes)
+                episodes = GetEpisodes().Result.ToList();
             
-
-            return new Anime_Episodes(anime, episodes);
+            return new Anime_Episodes(anime, episodes.ToArray());
         }
         return null;
     }
-
 
     public async Task<Episode[]> GetEpisodes()
     {
@@ -144,13 +190,14 @@ public class CR_API : ICR_API
         {
             cookie.Click();
         }
-        await Task.Delay(3000);
+        await Task.Delay(4000);
 
         // Bin auf der Seite _browser.Webdriver
 
-        var test = _browser.WebDriver.FindElements(By.ClassName("erc-seasons-select")).FirstOrDefault();
+        var test = _browser.WebDriver.FindElements(By.ClassName("erc-seasons-select")).FirstOrDefault();// Problem
         if(test is not null)
         {
+            
             test.Click();
 
             await Task.Delay(2000);
@@ -173,22 +220,80 @@ public class CR_API : ICR_API
                 var s = _browser.WebDriver.FindElements(By.ClassName("select-content__option--gq8Uo"));
                 if(s.Count> 0)
                     s[i].Click();
-                await Task.Delay(1000);
+                await Task.Delay(2000);
+
+                while(true)
+                {
+                    var more = _browser.WebDriver.FindElements(By.ClassName("button--is-type-four--yKPXY")).FirstOrDefault();
+
+                    if (more is null)
+                        break;
+                    else
+                        more.Click();
+                    await Task.Delay(1000);
+                }
 
                 var episodes = GetEpisodesperSeason().Result;
                 episodesList.AddRange(episodes);
-                
-
                 await Task.Delay(2000);
             }
         }
         else
         {
             await Task.Delay(1000);
+
+            while (true)
+            {
+                var more = _browser.WebDriver.FindElements(By.ClassName("button--is-type-four--yKPXY")).FirstOrDefault();
+
+                if (more is null)
+                    break;
+                else
+                    more.Click();
+                await Task.Delay(1000);
+            }
+
             var episodes = GetEpisodesperSeason().Result;
             episodesList.AddRange(episodes);
         }
         return episodesList.ToArray();
+    }
+
+    public async Task<Episode> GetEpisodeDetails(Episode episode)
+    {
+        string url = episode.Url;
+
+        var doc = _browser.GetPageDocument(url, 2000).Result;
+
+        var main = Helper.FindNodesByDocument(doc, "div", "class", "erc-current-media-info").Result.FirstOrDefault();
+        if (main is null)
+            return episode;
+
+        var date = Helper.FindNodesByNode(main, "p", "class", "text--gq6o- text--is-m--pqiL- release-date").Result.FirstOrDefault();
+        if(date is not null)
+        {
+            var d = date.InnerHtml.Replace("Veröffentlicht am ", "");
+            if (!string.IsNullOrWhiteSpace(d))
+            {
+                var datetime = DateTime.Parse(d).ToString("dd.MM.yyyy");
+                episode.ReleaseDate = datetime;
+            }
+            else
+                episode.ReleaseDate = "-";
+        }
+
+
+        var desc = Helper.FindNodesByNode(main, "p", "class", "text--gq6o- text--is-l--iccTo expandable-section__text---00oG").Result.FirstOrDefault();
+        if (desc is not null)
+        {
+            episode.Description = desc.InnerText;
+            if (string.IsNullOrWhiteSpace(desc.InnerText))
+                episode.Description = "-";
+        }
+        else
+            episode.Description = "-";
+
+        return episode;
     }
 
     #region Private Get Methods
@@ -324,8 +429,10 @@ public class CR_API : ICR_API
 
         if (rating != null)
         {
-            var d = double.Parse(rating.InnerText.Substring(0, 3).Replace(".",","));
-            return d;
+            var number = double.TryParse(rating.InnerText.Substring(0, 3).Replace(".", ","), out double d);
+            if (number)
+                return d;
+            return 0;
         }
         return 0;
     }

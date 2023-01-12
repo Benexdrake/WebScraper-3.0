@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using OpenQA.Selenium.Support.UI;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Webscraper_API;
@@ -33,8 +34,8 @@ public class Browser
     public async Task<HtmlDocument> GetPageDocument(string url, int delay)
     {
         WebDriver.Navigate().GoToUrl(url);
-        var hondaButton = WebDriver.FindElements(By.ClassName("fit-vehicle-list-view-text")).FirstOrDefault();
 
+        var hondaButton = WebDriver.FindElements(By.ClassName("fit-vehicle-list-view-text")).FirstOrDefault();
 
         if (hondaButton is not null)
         {

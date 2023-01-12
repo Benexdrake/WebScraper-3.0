@@ -16,16 +16,8 @@ public class CrunchyrollController : ICrunchyrollController
 
     private void SaveAnime(Anime anime)
     {
-        try
-        {
-            _context.Animes.Add(anime);
-            _context.SaveChanges();
-        }
-        catch (Exception e)
-        {
-
-            Log.Logger.Error(e.Message);
-        }
+        _context.Animes.Add(anime);
+        _context.SaveChanges();   
     }
 
 
@@ -43,7 +35,7 @@ public class CrunchyrollController : ICrunchyrollController
 
     public async Task FullUpdateAnimes()
     {
-        var urls = GetUrls().Result;
+        var urls = _api.GetAllAnimeUrlsAsync().Result;
         try
         {
             int i = 0;
@@ -84,7 +76,9 @@ public class CrunchyrollController : ICrunchyrollController
 
     public async Task SimulcastUpdate()
     {
-        var urls = _api.GetSimulcastUpdateUrlsAsync().Result;
+        //var urls = _api.GetSimulcastUpdateUrlsAsync().Result;
+
+        var urls = _api.GetDailyUpdateAsync().Result;
         //var animes = _context.Animes.ToList();
 
         var updateList = new List<Anime>();
@@ -126,11 +120,6 @@ public class CrunchyrollController : ICrunchyrollController
         }
     }
 
-    private async Task<string[]> GetUrls()
-    {
-        return _api.GetAllAnimeUrlsAsync().Result;
-    }
-
     public async Task Debug(string url)
     {
         //var anime = _api.GetAnimeByUrlAsync(url, 2000).Result;
@@ -138,9 +127,14 @@ public class CrunchyrollController : ICrunchyrollController
         //Console.WriteLine(anime.Name);
         //SaveAnime(anime);
 
-        var animeEpisode = _api.GetAnimewithEpisodes(url, 2000).Result;
-        Console.WriteLine();
-        SaveAnime(animeEpisode.Anime);
+        //var animeEpisode = _api.GetAnimewithEpisodes(url, 2000).Result;
+        //Console.WriteLine();
+        //SaveAnime(animeEpisode.Anime);
+
+        var episode = _context.Episodes.FirstOrDefault();
+
+
+        var e = _api.GetEpisodeDetails(episode).Result;
 
         //SaveEpisodes(animeEpisode.Episodes);
 
