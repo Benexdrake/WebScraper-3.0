@@ -7,6 +7,7 @@ public class Main : IHostedService
     private readonly IPokemonCardController _pokemonCardController;
     private readonly IHondaPartsController _hondaPartsController;
     private readonly MagicController _magicController;
+    private readonly IphoneController _iphoneController;
 
     private readonly Browser _browser;
 
@@ -18,6 +19,7 @@ public class Main : IHostedService
         _pokemonCardController= service.GetRequiredService<IPokemonCardController>();
         _hondaPartsController = service.GetRequiredService<IHondaPartsController>();
         _magicController = service.GetRequiredService<MagicController>();
+        _iphoneController= service.GetRequiredService<IphoneController>();
         _browser= service.GetRequiredService<Browser>();
     }
 
@@ -28,7 +30,7 @@ public class Main : IHostedService
         // Crunchyroll Debug with Url
 
 
-        await _crunchyrollController.Debug("https://www.crunchyroll.com/de/series/GVDHX8QNW/chainsaw-man");
+        //await _crunchyrollController.Debug("https://www.crunchyroll.com/de/series/GVDHX8QNW/chainsaw-man");
 
 
         //await _crunchyrollController.SimulcastUpdate();
@@ -57,6 +59,10 @@ public class Main : IHostedService
 
         // Magic TCG
         //await _magicController.Test();
+
+        // Iphones
+
+        await _iphoneController.GetAllIphones();
     }
 
 

@@ -4,7 +4,6 @@ namespace Webscraper_API.Scraper.Crunchyroll.Controllers;
 
 public class CR_API : ICR_API
 {
-    private readonly IServiceProvider _service;
     private readonly Browser _browser;
 
     public string Message { get; set; }
@@ -12,7 +11,6 @@ public class CR_API : ICR_API
 
     public CR_API(IServiceProvider service)
     {
-        _service = service;
         _browser = service.GetRequiredService<Browser>();
     }
 
