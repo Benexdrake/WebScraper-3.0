@@ -2,7 +2,7 @@
 {
     public interface IIMDbController
     {
-        Task GetMovie(string url);
+        Task<Movie> GetMovie(string url);
         Task LoadTop250();
     }
 }

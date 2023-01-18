@@ -12,7 +12,7 @@ namespace Webscraper_API.Scraper.IMDB.Models
         public string Title { get; set; } = string.Empty;
         //public string TrailerUrl { get; set; } = string.Empty;
         public string Genres { get; set; } = string.Empty;
-        public string Rating { get; set; } = string.Empty;
+        public double Rating { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
         public string ImgUrl { get; set; } = string.Empty;

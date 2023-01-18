@@ -232,7 +232,7 @@
 
                 return url;
             }
-            return "-";
+            return "";
         }
 
         private string GetImgUrl(HtmlNode node)
@@ -243,7 +243,7 @@
                 var split = pic.OuterHtml.Split('"');
                 return split[7];
             }
-            return "-";
+            return "";
         }
 
         private string GetTitle(HtmlNode node)
@@ -270,12 +270,12 @@
         }
 
         // Get Rating
-        private string GetRating(HtmlNode node)
+        private double GetRating(HtmlNode node)
         {
             var r = FindNodesByNode(node, "div", "data-testid", "hero-rating-bar__aggregate-rating__score").Result.FirstOrDefault();
             if (r != null)
-                return r.InnerText.Split('/')[0].Replace(",", ".");
-            return "0";
+                return Double.Parse(r.InnerText.Split('/')[0]);
+            return 0;
         }
 
         private string GetScript(HtmlNode node)
@@ -286,7 +286,7 @@
             var script = string.Empty;
 
             if (script1.Count == 0 || script2.Count == 0)
-                return "-";
+                return "";
 
             if (script1.Count < script2.Count)
             {
@@ -314,7 +314,7 @@
         {
             var maincast = FindNodesByNode(node, "ul", "class", "ipc-inline-list ipc-inline-list--show-dividers ipc-inline-list--inline ipc-metadata-list-item__list-content baseAlt").Result.FirstOrDefault();
             if (maincast == null)
-                return "-";
+                return "";
             var maincastSubs = FindNodesByNode(maincast, "a", "class", "ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link").Result;
 
             string cast = "";
@@ -334,7 +334,7 @@
             if (d != null)
                 return d.InnerText;
 
-            return "-";
+            return "";
         }
 
         private string GetDescription(HtmlNode node)
@@ -349,7 +349,7 @@
                 // Erscheinungsdatum
                 return text.Replace("Erscheinungsdatum", "");
             }
-            return "-";
+            return "";
         }
 
         private string GetOriginCountry(string text)
@@ -359,7 +359,7 @@
                 // Herkunftsland
                 return text.Replace("Herkunftsland", "");
             }
-            return "-";
+            return "";
         }
         private string GetOriginCountries(string text)
         {
@@ -368,7 +368,7 @@
                 // Herkunftsland
                 return text.Replace("Herkunftsländer", "");
             }
-            return "-";
+            return "";
         }
 
         private string GetBudget(HtmlNode node)
@@ -379,7 +379,7 @@
 
                 return bo[1].InnerText.Replace("(geschätzt)", "");
             }
-            return "-";
+            return "";
         }
 
         private string GetRuntime(HtmlNode node)
@@ -390,7 +390,7 @@
 
                 return tech[0].InnerText.Replace("Laufzeit", "");
             }
-            return "-";
+            return "";
         }
 
         private string GetLocation(string text)
@@ -400,7 +400,7 @@
                 // Drehorte
                 return text.Replace("Drehorte", "");
             }
-            return "-";
+            return "";
         }
 
         private string GetKnownAs(string text)
@@ -410,7 +410,7 @@
                 // auch bekannt als
                 return text.Replace("Auch bekannt als", "");
             }
-            return "-";
+            return "";
         }
 
         private string GetProductionCompany(string text)
@@ -420,7 +420,7 @@
                 // Produktionsfirmen
                 return text.Replace("Produktionsfirma", "");
             }
-            return "-";
+            return "";
         }
 
         private string GetProductionCompanies(string text)
@@ -430,7 +430,7 @@
                 // Produktionsfirmen
                 return text.Replace("Produktionsfirmen", "");
             }
-            return "-";
+            return "";
         }
 
         #endregion

@@ -26,7 +26,7 @@ namespace Webscraper_API.Scraper.IMDB.BuildModels
             return this;
         }
 
-        public MovieBuilder Rating(string r)
+        public MovieBuilder Rating(double r)
         {
             movie.Rating = r;
             return this;
