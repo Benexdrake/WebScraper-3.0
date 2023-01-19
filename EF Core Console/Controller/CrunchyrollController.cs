@@ -1,4 +1,5 @@
-﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+﻿using Webscraper_API.Scraper.Apple.Iphone.Controllers;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EF_Core_Console.Controller;
 public class CrunchyrollController : ICrunchyrollController
@@ -20,7 +21,6 @@ public class CrunchyrollController : ICrunchyrollController
         _context.SaveChanges();   
     }
 
-
     private void SaveEpisodes(Episode episode)
     {
         _context.Episodes.Add(episode);
@@ -29,7 +29,14 @@ public class CrunchyrollController : ICrunchyrollController
 
     private void UpdateAnime(Anime anime, Anime aDb)
     {
-        //aDb.Episodes = anime.Episodes;
+        aDb.Episodes = anime.Episodes;
+        _context.SaveChanges();
+    }
+
+    private async Task UpdateEpisodeAsync(Episode episode, Episode episodeDb)
+    {
+        episodeDb.ReleaseDate = episode.ReleaseDate;
+        episodeDb.Description = episode.Description;
         _context.SaveChanges();
     }
 
@@ -41,28 +48,42 @@ public class CrunchyrollController : ICrunchyrollController
             int i = 0;
             foreach (var url in urls)
             {
+                _api.Episodes = 0;
                 i++;
                 var a = _context.Animes.Where(a => a.Url.Equals(url)).FirstOrDefault();
-                if (a is null)
+                if (a is not null)
+                    _api.Episodes = a.Episodes;
+                var AE = _api.GetAnimewithEpisodes(url, 2000).Result;
+                if(AE is not null)
                 {
-                    var AE = _api.GetAnimewithEpisodes(url, 2000).Result;
-                    if (AE is not null)
-                    {
+                    if (a is not null)
+                        UpdateAnime(AE.Anime, a);
+                    else
                         SaveAnime(AE.Anime);
-                        foreach (var e in AE.Episodes)
+                    foreach (var e in AE.Episodes)
+                    {
+                        var episode = _context.Episodes.Where(a => a.Id.Equals(e.Id)).FirstOrDefault();
+                        if(episode is null)
                         {
-                            var episode = _context.Episodes.Where(a => a.Id.Equals(e.Id)).FirstOrDefault();
-                            if(episode is null)
-                            {
-                                SaveEpisodes(e);
-                            }
+                            SaveEpisodes(e);
                         }
                     }
                 }
                 var percent = Helper.Percent(i, urls.Length);
-                Log.Logger.Information($"Animes found: {percent}%/100%");
+                Log.Logger.Information($"Animes Saved: {percent}%/100%");
                 Log.Logger.Information(url);
             }
+            var episodeUrls = _context.Episodes.Where(x => string.IsNullOrWhiteSpace(x.ReleaseDate) || string.IsNullOrWhiteSpace(x.Description));
+            var count = episodeUrls.Count();
+            foreach (var url in episodeUrls)
+            {
+                var episode = _api.GetEpisodeDetails(url).Result;
+                if (episode is not null)
+                {
+                    await UpdateEpisodeAsync(episode, url);
+                }
+            }
+
         }
         catch (Exception e)
         {

@@ -33,7 +33,7 @@ public class Main : IHostedService
         //await _crunchyrollController.SimulcastUpdate();
 
         // Crunchyroll Full Update
-        //await _crunchyrollController.FullUpdateAnimes();
+        await _crunchyrollController.FullUpdateAnimes();
 
         // Imdb Single Movie with Url
         //await _iMDbController.GetMovie("https://www.imdb.com/title/tt0111161/");

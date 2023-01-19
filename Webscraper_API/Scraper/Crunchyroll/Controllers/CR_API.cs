@@ -153,6 +153,10 @@ public class CR_API : ICR_API
         {
             var episodeCount = Helper.FindNodesByNode(main, "span", "class", "text--gq6o- text--is-m--pqiL- meta-tags__tag--W4JTZ").Result.FirstOrDefault();
 
+            var e = int.Parse(episodeCount.InnerText.Replace(" Videos", "").Replace(" Video", "").Replace(".", ""));
+            if (Episodes == e)
+                return null;
+
             var episodes = new List<Episode>();
 
             var anime = builder
@@ -166,7 +170,7 @@ public class CR_API : ICR_API
                         .Rating(GetRating(main))
                         .Tags(GetTags(main))
                         .Publisher(GetPublisher(main))
-                        .Episodes(int.Parse(episodeCount.InnerText.Replace(" Videos","").Replace(" Video","").Replace(".","")))
+                        .Episodes(e)
                         .GetAnime();
 
             if(Episodes != anime.Episodes)
@@ -280,7 +284,6 @@ public class CR_API : ICR_API
                 episode.ReleaseDate = "-";
         }
 
-
         var desc = Helper.FindNodesByNode(main, "p", "class", "text--gq6o- text--is-l--iccTo expandable-section__text---00oG").Result.FirstOrDefault();
         if (desc is not null)
         {
@@ -341,16 +344,12 @@ public class CR_API : ICR_API
         return null;
     }
 
-
-
-
     private string GetId(string url)
     {
         var id = url.Split('/')[5];
         return id;
     }
 
-    // X
     private string GetName(HtmlNode node)
     {
         var name = Helper.FindNodesByNode(node, "div", "class", "hero-heading-line").Result.FirstOrDefault();
@@ -361,7 +360,6 @@ public class CR_API : ICR_API
         return "No Name";
     }
 
-    // X
     private string GetImage(HtmlDocument doc)
     {
         var img = Helper.FindNodesByDocument(doc, "img", "alt", "Serien-Hintergrund").Result.FirstOrDefault();
@@ -381,7 +379,7 @@ public class CR_API : ICR_API
         return "No Description";
     }
 
-    // X
+    
     private string GetTags(HtmlNode node)
     {
         var info = Helper.FindNodesByNode(node, "div", "class", "genres").Result.FirstOrDefault();
@@ -406,7 +404,7 @@ public class CR_API : ICR_API
         }
         return "";
     }
-    // X
+   
     private string GetPublisher(HtmlNode node)
     {
         var details = Helper.FindNodesByNode(node, "div", "class", "show-details-table").Result.FirstOrDefault();
@@ -420,7 +418,6 @@ public class CR_API : ICR_API
         return "";
     }
 
-    // X
     private double GetRating(HtmlNode node)
     {
         var rating = Helper.FindNodesByNode(node, "span", "class", "star-rating-average-data__label").Result.FirstOrDefault();
@@ -434,20 +431,5 @@ public class CR_API : ICR_API
         }
         return 0;
     }
-
-    // X
-    //private int GetEpisodes(HtmlNode node)
-    //{
-    //    var episodes = Helper.FindNodesByNode(node, "div", "class", "meta-tags").Result.FirstOrDefault();
-    //    //var episodes = Helper.FindNodesByDocument(doc, "div", "class", "erc-playable-collection").Result.FirstOrDefault();
-    //    //var list = Helper.FindNodesByNode(episodes, "div", "class", "playable-card-static__body--CmmkB").Result;
-
-    //    //return list.Count;
-    //    if (episodes != null)
-    //        return int.Parse(episodes.InnerText.Split(" ")[0].Replace(".", ""));
-    //    return 0;
-    //}
-
-    
     #endregion
 }
