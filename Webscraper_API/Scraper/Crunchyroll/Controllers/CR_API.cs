@@ -1,5 +1,7 @@
 ﻿
 
+using System;
+
 namespace Webscraper_API.Scraper.Crunchyroll.Controllers;
 
 public class CR_API : ICR_API
@@ -7,7 +9,6 @@ public class CR_API : ICR_API
     private readonly Browser _browser;
 
     public string Message { get; set; }
-    public int Episodes { get; set; }
 
     public CR_API(IServiceProvider service)
     {
@@ -151,13 +152,12 @@ public class CR_API : ICR_API
 
         if (main is not null)
         {
-            var episodeCount = Helper.FindNodesByNode(main, "span", "class", "text--gq6o- text--is-m--pqiL- meta-tags__tag--W4JTZ").Result.FirstOrDefault();
+            //var episodeCount = Helper.FindNodesByNode(main, "span", "class", "text--gq6o- text--is-m--pqiL- meta-tags__tag--W4JTZ").Result.FirstOrDefault();
 
-            var e = int.Parse(episodeCount.InnerText.Replace(" Videos", "").Replace(" Video", "").Replace(".", ""));
-            if (Episodes == e)
-                return null;
-
+            //var e = int.Parse(episodeCount.InnerText.Replace(" Videos", "").Replace(" Video", "").Replace(".", ""));
+           
             var episodes = new List<Episode>();
+                episodes = GetEpisodesAsync().Result.ToList();
 
             var anime = builder
                         .a
@@ -170,79 +170,131 @@ public class CR_API : ICR_API
                         .Rating(GetRating(main))
                         .Tags(GetTags(main))
                         .Publisher(GetPublisher(main))
-                        .Episodes(e)
+                        .Episodes(episodes.Count)
                         .GetAnime();
 
-            if(Episodes != anime.Episodes)
-                episodes = GetEpisodes().Result.ToList();
+            
             
             return new Anime_Episodes(anime, episodes.ToArray());
         }
         return null;
     }
 
-    public async Task<Episode[]> GetEpisodes()
+    //public async Task<Episode[]> GetEpisodes()
+    //{
+    //    List<Episode> episodesList = new();
+
+    //    // Cookies akzeptieren
+
+    //    var cookie = _browser.WebDriver.FindElements(By.ClassName("evidon-banner-acceptbutton")).FirstOrDefault();
+    //    if (cookie is not null) 
+    //    {
+    //        cookie.Click();
+    //    }
+    //    await Task.Delay(4000);
+
+    //    // Bin auf der Seite _browser.Webdriver
+
+    //    var test = _browser.WebDriver.FindElements(By.ClassName("erc-seasons-select")).FirstOrDefault();// Problem
+    //    if(test is not null)
+    //    {
+            
+    //        test.Click();
+
+    //        await Task.Delay(2000);
+
+    //        // Sammeln der Seasons
+
+    //        var seasons = _browser.WebDriver.FindElements(By.ClassName("select-content__option--gq8Uo"));
+
+    //        test.Click();
+    //        await Task.Delay(3000);
+    //        for (int i = 0; i < seasons.Count; i++)
+    //        {
+    //            // Klicken auf Season List Button
+    //            var t = _browser.WebDriver.FindElements(By.ClassName("erc-seasons-select")).FirstOrDefault();
+    //            if(t is not null)
+    //                t.Click();
+
+    //            await Task.Delay(2000);
+    //            // Auswahl der Season
+    //            var s = _browser.WebDriver.FindElements(By.ClassName("select-content__option--gq8Uo"));
+    //            if(s.Count> 0)
+    //                s[i].Click();
+    //            await Task.Delay(2000);
+
+    //            while(true)
+    //            {
+    //                var more = _browser.WebDriver.FindElements(By.ClassName("button--is-type-four--yKPXY")).FirstOrDefault();
+
+    //                if (more is null)
+    //                    break;
+    //                else
+    //                    more.Click();
+    //                await Task.Delay(1000);
+    //            }
+
+    //            var episodes = GetEpisodesperSeason().Result;
+    //            episodesList.AddRange(episodes);
+    //            await Task.Delay(2000);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        await Task.Delay(1000);
+
+    //        while (true)
+    //        {
+    //            var more = _browser.WebDriver.FindElements(By.ClassName("button--is-type-four--yKPXY")).FirstOrDefault();
+
+    //            if (more is null)
+    //                break;
+    //            else
+    //                more.Click();
+    //            await Task.Delay(1000);
+    //        }
+
+    //        var episodes = GetEpisodesperSeason().Result;
+    //        episodesList.AddRange(episodes);
+    //    }
+    //    return episodesList.ToArray();
+    //}
+
+    public async Task<Episode[]> GetEpisodesAsync()
     {
         List<Episode> episodesList = new();
 
-        // Cookies akzeptieren
-
         var cookie = _browser.WebDriver.FindElements(By.ClassName("evidon-banner-acceptbutton")).FirstOrDefault();
-        if (cookie is not null) 
+        if (cookie is not null)
         {
             cookie.Click();
         }
-        await Task.Delay(4000);
+        await Task.Delay(5000);
 
-        // Bin auf der Seite _browser.Webdriver
-
-        var test = _browser.WebDriver.FindElements(By.ClassName("erc-seasons-select")).FirstOrDefault();// Problem
-        if(test is not null)
-        {
-            
-            test.Click();
-
-            await Task.Delay(2000);
-
-            // Sammeln der Seasons
-
-            var seasons = _browser.WebDriver.FindElements(By.ClassName("select-content__option--gq8Uo"));
-
-            test.Click();
-            await Task.Delay(3000);
-            for (int i = 0; i < seasons.Count; i++)
-            {
-                // Klicken auf Season List Button
-                var t = _browser.WebDriver.FindElements(By.ClassName("erc-seasons-select")).FirstOrDefault();
-                if(t is not null)
-                    t.Click();
-
-                await Task.Delay(2000);
-                // Auswahl der Season
-                var s = _browser.WebDriver.FindElements(By.ClassName("select-content__option--gq8Uo"));
-                if(s.Count> 0)
-                    s[i].Click();
-                await Task.Delay(2000);
-
-                while(true)
-                {
-                    var more = _browser.WebDriver.FindElements(By.ClassName("button--is-type-four--yKPXY")).FirstOrDefault();
-
-                    if (more is null)
-                        break;
-                    else
-                        more.Click();
-                    await Task.Delay(1000);
-                }
-
-                var episodes = GetEpisodesperSeason().Result;
-                episodesList.AddRange(episodes);
-                await Task.Delay(2000);
-            }
-        }
-        else
+        // while schleife bis div hat state-disabled für <
+        while (true)
         {
             await Task.Delay(1000);
+
+            var before = _browser.WebDriver.FindElements(By.ClassName("cta-wrapper")).FirstOrDefault();
+            if (before is not null)
+            {
+                var b = before.GetAttribute("class");
+
+                if (b.Contains("state-disabled"))
+                    break;
+                else
+                    before.Click();
+            }
+            else
+                break;
+        }
+
+        // while schleife bis div hat state-disabled für >
+
+        while(true)
+        {
+            await Task.Delay(1200);
 
             while (true)
             {
@@ -257,6 +309,22 @@ public class CR_API : ICR_API
 
             var episodes = GetEpisodesperSeason().Result;
             episodesList.AddRange(episodes);
+            //Console.WriteLine(episodesList.Count);
+
+            var next = _browser.WebDriver.FindElements(By.ClassName("cta-wrapper"))[1];
+
+
+            if(next is not null)
+            {
+                var b = next.GetAttribute("class");
+                if (b.Contains("state-disabled"))
+                    break;
+                else
+                {
+                    next.Click();
+                }
+            }
+
         }
         return episodesList.ToArray();
     }
