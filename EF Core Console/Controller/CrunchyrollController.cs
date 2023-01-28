@@ -48,11 +48,8 @@ public class CrunchyrollController : ICrunchyrollController
             int i = 0;
             foreach (var url in urls)
             {
-                _api.Episodes = 0;
                 i++;
                 var a = _context.Animes.Where(a => a.Url.Equals(url)).FirstOrDefault();
-                if (a is not null)
-                    _api.Episodes = a.Episodes;
                 var AE = _api.GetAnimewithEpisodes(url, 2000).Result;
                 if(AE is not null)
                 {

@@ -4,5 +4,6 @@
     {
         Task<Movie> GetMovie(string url);
         Task LoadTop250();
+        Task GetFavorits(string id);
     }
 }

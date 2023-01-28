@@ -8,6 +8,7 @@ public class Main : IHostedService
     private readonly IHondaPartsController _hondaPartsController;
     private readonly MagicController _magicController;
     private readonly IphoneController _iphoneController;
+    private readonly OnePlusController _onePlusController;
 
     private readonly Browser _browser;
 
@@ -20,6 +21,7 @@ public class Main : IHostedService
         _hondaPartsController = service.GetRequiredService<IHondaPartsController>();
         _magicController = service.GetRequiredService<MagicController>();
         _iphoneController= service.GetRequiredService<IphoneController>();
+        _onePlusController= service.GetRequiredService<OnePlusController>();
         _browser= service.GetRequiredService<Browser>();
     }
 
@@ -33,7 +35,7 @@ public class Main : IHostedService
         //await _crunchyrollController.SimulcastUpdate();
 
         // Crunchyroll Full Update
-        await _crunchyrollController.FullUpdateAnimes();
+        //await _crunchyrollController.FullUpdateAnimes();
 
         // Imdb Single Movie with Url
         //await _iMDbController.GetMovie("https://www.imdb.com/title/tt0111161/");
@@ -41,6 +43,7 @@ public class Main : IHostedService
 
         // Imdb Top 250
         //await _iMDbController.LoadTop250();
+        //await _iMDbController.GetFavorits("ls000471608");
 
         // Pokemon Single Pokemon with Nr
         //await _pokemonController.GetPokemon(3);
@@ -61,12 +64,12 @@ public class Main : IHostedService
 
         //await _iphoneController.GetAllIphones();
 
+        // One Plus Phones
+
+        //await _onePlusController.AllPhones();
 
         Console.WriteLine();
     }
-
-
-    
 
     public Task StopAsync(CancellationToken cancellationToken = default)
     {

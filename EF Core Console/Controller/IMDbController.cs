@@ -28,7 +28,7 @@ public class IMDbController : IIMDbController
 
     public async Task LoadTop250()
     {
-        var urls = _iMDb_API.GetMovieTop250Urls(_browser.GetPageDocument("https://www.imdb.com/chart/top/?ref_=nv_mv_250", 1000).Result).Result;
+        var urls = _iMDb_API.GetMovieTop250Urls().Result;
         int i = 1;
         foreach (var url in urls)
         {
@@ -45,11 +45,23 @@ public class IMDbController : IIMDbController
         var m = _context.Movies.Where(x => x.Id.Equals(split[4])).FirstOrDefault();
         if (m is null)
         {
-            var doc = _browser.GetPageDocument(url, 1000).Result;
-            var movie = _iMDb_API.GetMovieByUrlAsync(url, doc).Result;
+            var movie = _iMDb_API.GetMovieByUrlAsync(url).Result;
             SaveMovie(movie);
             return movie;
         }
         return null;
+    }
+
+    public async Task GetFavorits(string id)
+    {
+        var urls = _iMDb_API.GetFavoritUrlsAsync(id).Result;
+
+        for (int i = 0; i < urls.Length; i++)
+        {
+            Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> " + Helper.Percent(i, urls.Length) + "% / 100%");
+            var movie = GetMovie(urls[i]).Result;
+            if(movie is not null)
+                Console.WriteLine($"Found: {movie.Title}");
+        }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using EF_Core_Console.Data;
 using EF_Core_Console.Interfaces;
-using Webscraper_API.Interfaces;
 using Webscraper_API.Scraper.Apple.Iphone.Controllers;
 using Webscraper_API.Scraper.Crunchyroll.Controllers;
 using Webscraper_API.Scraper.Honda.Controllers;
 using Webscraper_API.Scraper.IMDB.Controllers;
+using Webscraper_API.Scraper.OnePlus.Controllers;
 using Webscraper_API.Scraper.Pokemons.Controller;
 using Webscraper_API.Scraper.TCG_Magic.Controller;
 using Webscraper_API.Scraper.TCG_Pokemon.Controller;
@@ -33,14 +33,17 @@ var host = Host.CreateDefaultBuilder()
         service.AddScoped<IHonda_Api, Honda_Api>();
         service.AddScoped<TCG_M_API>();
         service.AddScoped<I_API>();
+        service.AddScoped<IOP_API, OP_API>();
 
         service.AddScoped<ICrunchyrollController, CrunchyrollController>();
         service.AddScoped<IIMDbController, IMDbController>();
         service.AddScoped<IPokemonController, PokemonController>();
         service.AddScoped<IPokemonCardController, PokemonCardController>();
         service.AddScoped <IHondaPartsController, HondaPartsController>();
+
         service.AddScoped<MagicController>();
         service.AddScoped<IphoneController>();
+        service.AddScoped<OnePlusController>();
 
         service.AddDbContext<CrunchyrollDBContext>(options => options.UseSqlServer(conf.GetConnectionString("Crunchyroll")));
         service.AddDbContext<ImdbDBContext>(options => options.UseSqlServer(conf.GetConnectionString("IMDB")));
@@ -49,6 +52,10 @@ var host = Host.CreateDefaultBuilder()
         service.AddDbContext<HondaPartsDbContext>(options => options.UseSqlServer(conf.GetConnectionString("HondaParts")));
 
         service.AddHostedService<Main>();
+
+        
+            
+
     })
     .Build();
 
