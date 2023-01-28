@@ -1,10 +1,20 @@
-﻿namespace Webscraper_API.Scraper.IMDB.Controllers
+﻿using System;
+
+namespace Webscraper_API.Scraper.IMDB.Controllers
 {
     public class IMDb_API : IIMDb_API
     {
-        #region Get a Movie by Url
-        public async Task<Movie> GetMovieByUrlAsync(string url, HtmlDocument doc)
+        private readonly Browser _browser;
+        public IMDb_API(IServiceProvider service)
         {
+            _browser = service.GetRequiredService<Browser>();
+        }
+
+        #region Get a Movie by Url
+        public async Task<Movie> GetMovieByUrlAsync(string url)
+        {
+            var doc = _browser.GetPageDocument(url, 1000).Result;
+
             BuildModels.Builder b = new BuildModels.Builder();
 
             var main = FindNodesByDocument(doc, "section", "class", "ipc-page-section").Result.ToList();
@@ -91,40 +101,65 @@
         }
         #endregion
 
-        //public async Task<List<UrlList>> GetMoviesUrlsByKeyword(string keyWord)
-        //{
-        //    int s = 0;
+        #region Favorit List by List ID
 
-        //    List<UrlList> urls = new();
+        public async Task<string[]> GetFavoritUrlsAsync(string id)
+        {
+            int maxSides = 1;
+            string url = $"https://www.imdb.com/list/{id}/?sort=list_order,asc&st_dt=&mode=simple&page=1&ref_=ttls_vw_smp";
+            List<string> favUrls = new();
+            var doc = _browser.GetPageDocument(url, 1000).Result;
 
-        //    while (true)
-        //    {
-        //        s++;
+            var counterNode = Helper.FindNodesByDocument(doc,"div","class", "desc lister-total-num-results").Result.FirstOrDefault();
+            if(counterNode is not null)
+            {
+                var counter = int.Parse(counterNode.InnerText.Replace("titles", " ").Trim());
+                if (counter % 100 == 0)
+                    maxSides = counter / 100;
+                else
+                    maxSides = (counter / 100) + 1;
 
+                for (int i = 1; i <= maxSides; i++)
+                {
+                    url = $"https://www.imdb.com/list/{id}/?sort=list_order,asc&st_dt=&mode=simple&page={i}&ref_=ttls_vw_smp";
+                    var urls = GetUrlsFromSide(url).Result;
+                    if(urls is not null)
+                        favUrls.AddRange(urls);
+                }
+                return favUrls.ToArray();
+            }
+            return null;
+        }
 
-        //        var urlList = GetMovieUrlsByUrlAsync(doc).Result;
+        private async Task<string[]> GetUrlsFromSide(string url)
+        {
+            var doc = _browser.GetPageDocument(url, 1000).Result;
+            var main = Helper.FindNodesByDocument(doc, "div", "class", "lister-list").Result.FirstOrDefault();
+            if(main is not null)
+            {
+                List<string> urls = new();
+                var listNodes = Helper.FindNodesByNode(main, "div", "class", "lister-item mode-simple").Result;
+                foreach (var list in listNodes)
+                {
+                    var u = "https://www.imdb.com" + list.InnerHtml.Split('"')[3];
+                    urls.Add(u);
+                }
+                return urls.ToArray();
+            }
+            return null;
+        }
 
-        //        if (urlList.Urls.Count == 0)
-        //            break;
+        #endregion
 
-        //        urls.Add(urlList);
-
-        //        int counter = urlList.Count / 50;
-        //        if (counter % 50 != 0)
-        //            counter++;
-        //        Console.WriteLine($">>> Seite {s}/{counter}");
-        //        Console.WriteLine();
-        //    }
-
-        //    return urls;
-        //}
 
         #region Get Urls from Top 250 Site
-        public async Task<List<string>> GetMovieTop250Urls(HtmlDocument doc)
+        public async Task<List<string>> GetMovieTop250Urls()
         {
+            string url = "https://www.imdb.com/chart/top/";
+            
+            var doc = _browser.GetPageDocument(url, 1000).Result;
             List<string> movieUrls = new List<string>();
 
-            //string url = "https://www.imdb.com/chart/top/";
 
             var main = FindNodesByDocument(doc, "div", "id", "main").Result.FirstOrDefault();
 
@@ -142,66 +177,7 @@
             return await Task.FromResult(movieUrls);
         }
         #endregion
-
-        #region Get Urls from Movies by Url from a List Site
-        //public async Task<UrlList> GetMovieUrlsByUrlAsync(HtmlDocument doc)
-        //{
-        //    var UrlList = new UrlList();
-
-        //    List<string> movieUrls = new List<string>();
-
-        //    var mainList = FindNodesByDocument(doc, "div", "class", "lister list detail sub-list").Result.FirstOrDefault();
-
-        //    if (mainList != null)
-        //    {
-        //        var counter = GetCounter(mainList);
-        //        UrlList.Count = counter;
-
-        //        var list = FindNodesByNodeEqual(mainList, "div", "class", "lister-item mode-simple").Result;
-
-        //        foreach (var l in list)
-        //        {
-        //            var u = FindNodesByNode(l, "a", "href", "title").Result[1].OuterHtml;
-        //            var s = u.Replace("<a href=\"/title/", "").Substring(0, 10);
-        //            movieUrls.Add($"https://www.imdb.com/title/{s}");
-        //        }
-        //    }
-        //    UrlList.Urls = movieUrls;
-        //    return await Task.FromResult(UrlList);
-        //}
-
-        #endregion
-
-        #region Get Urls from Movies by Url from a List Site with Sites
-        //public async Task<UrlList> GetMovieUrlsByUrlWithCounterAsync(string url, List<HtmlDocument> docs)
-        //{
-        //    var UrlList = new UrlList();
-        //    UrlList.Count = docs.Count;
-
-        //    for (int i = 1; i < docs.Count; i += 50)
-        //    {
-        //        var mainList = FindNodesByDocument(docs[i-1], "div", "class", "lister list detail sub-list").Result.FirstOrDefault();
-
-        //        if (mainList != null)
-        //        {
-        //            var counter = GetCounter(mainList);
-        //            UrlList.Count = counter;
-
-        //            var list = FindNodesByNodeEqual(mainList, "div", "class", "lister-item mode-simple").Result;
-
-        //            foreach (var l in list)
-        //            {
-        //                var u = FindNodesByNode(l, "a", "href", "title").Result[1].OuterHtml;
-        //                var s = u.Replace("<a href=\"/title/", "").Substring(0, 10);
-        //                UrlList.Urls.Add($"https://www.imdb.com/title/{s}");
-        //            }
-        //        }
-        //    }
-        //    return await Task.FromResult(UrlList);
-        //}
-
-        #endregion
-
+       
         #region Get Region
         private string GetId(string url)
         {

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Scraper\Honda\BuildModels\" />
+    <Folder Include="Scraper\OnePlus\Models\" />
   </ItemGroup>
 
   <ItemGroup>
