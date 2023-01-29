@@ -217,7 +217,8 @@ namespace Webscraper_API.Scraper.IMDB.Controllers
             if (pic != null)
             {
                 var split = pic.OuterHtml.Split('"');
-                return split[7];
+                var image = split[7].Split("@")[0] + "@._V1_.jpg";
+                return image;
             }
             return "";
         }

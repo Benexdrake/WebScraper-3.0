@@ -42,7 +42,7 @@ public class Main : IHostedService
         //var movie = await _iMDbController.GetMovie("https://www.imdb.com/title/tt1630029/");
 
         // Imdb Top 250
-        //await _iMDbController.LoadTop250();
+        await _iMDbController.LoadTop250();
         //await _iMDbController.GetFavorits("ls000471608");
 
         // Pokemon Single Pokemon with Nr
