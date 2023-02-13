@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium.Support.UI;
+﻿using OpenQA.Selenium;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -26,9 +26,9 @@ public class Browser
         return new FirefoxDriver(FService, options);
     }
 
-    public FirefoxDriver FirefoxDebug()
+    public void FirefoxDebug()
     {
-        return new FirefoxDriver();
+        WebDriver = new FirefoxDriver();
     }
 
     public async Task<HtmlDocument> GetPageDocument(string url, int delay)
@@ -40,6 +40,17 @@ public class Browser
         if (hondaButton is not null)
         {
             hondaButton.Click();
+        }
+
+        if(url.Contains("store.steampowered.com"))
+        {
+            var change = WebDriver.FindElements(By.XPath("/html/body/div[1]/div[7]/div[6]/div/div[2]/div/div[1]/div[2]/select[3]/option[1]")).FirstOrDefault();
+            if(change is not null)
+            {
+                change.Click();
+                var button = WebDriver.FindElement(By.ClassName("btnv6_blue_hoverfade"));
+                button.Click();
+            }
         }
         await Task.Delay(delay);
 

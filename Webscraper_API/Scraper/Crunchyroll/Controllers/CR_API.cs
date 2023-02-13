@@ -1,5 +1,6 @@
 ﻿
 
+using OpenQA.Selenium;
 using System;
 
 namespace Webscraper_API.Scraper.Crunchyroll.Controllers;
@@ -151,13 +152,8 @@ public class CR_API : ICR_API
         var main = Helper.FindNodesByDocument(doc, "div", "class", "erc-series-hero").Result.FirstOrDefault();
 
         if (main is not null)
-        {
-            //var episodeCount = Helper.FindNodesByNode(main, "span", "class", "text--gq6o- text--is-m--pqiL- meta-tags__tag--W4JTZ").Result.FirstOrDefault();
-
-            //var e = int.Parse(episodeCount.InnerText.Replace(" Videos", "").Replace(" Video", "").Replace(".", ""));
-           
-            var episodes = new List<Episode>();
-                episodes = GetEpisodesAsync().Result.ToList();
+        {  
+            var episodes = GetEpisodesAsync().Result.ToList();
 
             var anime = builder
                         .a
@@ -173,92 +169,10 @@ public class CR_API : ICR_API
                         .Episodes(episodes.Count)
                         .GetAnime();
 
-            
-            
             return new Anime_Episodes(anime, episodes.ToArray());
         }
         return null;
     }
-
-    //public async Task<Episode[]> GetEpisodes()
-    //{
-    //    List<Episode> episodesList = new();
-
-    //    // Cookies akzeptieren
-
-    //    var cookie = _browser.WebDriver.FindElements(By.ClassName("evidon-banner-acceptbutton")).FirstOrDefault();
-    //    if (cookie is not null) 
-    //    {
-    //        cookie.Click();
-    //    }
-    //    await Task.Delay(4000);
-
-    //    // Bin auf der Seite _browser.Webdriver
-
-    //    var test = _browser.WebDriver.FindElements(By.ClassName("erc-seasons-select")).FirstOrDefault();// Problem
-    //    if(test is not null)
-    //    {
-            
-    //        test.Click();
-
-    //        await Task.Delay(2000);
-
-    //        // Sammeln der Seasons
-
-    //        var seasons = _browser.WebDriver.FindElements(By.ClassName("select-content__option--gq8Uo"));
-
-    //        test.Click();
-    //        await Task.Delay(3000);
-    //        for (int i = 0; i < seasons.Count; i++)
-    //        {
-    //            // Klicken auf Season List Button
-    //            var t = _browser.WebDriver.FindElements(By.ClassName("erc-seasons-select")).FirstOrDefault();
-    //            if(t is not null)
-    //                t.Click();
-
-    //            await Task.Delay(2000);
-    //            // Auswahl der Season
-    //            var s = _browser.WebDriver.FindElements(By.ClassName("select-content__option--gq8Uo"));
-    //            if(s.Count> 0)
-    //                s[i].Click();
-    //            await Task.Delay(2000);
-
-    //            while(true)
-    //            {
-    //                var more = _browser.WebDriver.FindElements(By.ClassName("button--is-type-four--yKPXY")).FirstOrDefault();
-
-    //                if (more is null)
-    //                    break;
-    //                else
-    //                    more.Click();
-    //                await Task.Delay(1000);
-    //            }
-
-    //            var episodes = GetEpisodesperSeason().Result;
-    //            episodesList.AddRange(episodes);
-    //            await Task.Delay(2000);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        await Task.Delay(1000);
-
-    //        while (true)
-    //        {
-    //            var more = _browser.WebDriver.FindElements(By.ClassName("button--is-type-four--yKPXY")).FirstOrDefault();
-
-    //            if (more is null)
-    //                break;
-    //            else
-    //                more.Click();
-    //            await Task.Delay(1000);
-    //        }
-
-    //        var episodes = GetEpisodesperSeason().Result;
-    //        episodesList.AddRange(episodes);
-    //    }
-    //    return episodesList.ToArray();
-    //}
 
     public async Task<Episode[]> GetEpisodesAsync()
     {
@@ -324,7 +238,6 @@ public class CR_API : ICR_API
                     next.Click();
                 }
             }
-
         }
         return episodesList.ToArray();
     }

@@ -41,7 +41,7 @@ namespace EF_Core_Console.Controller
             foreach (var u in urls)
             {
                 Console.WriteLine($"{Helper.Percent(i, urls.Count)}% / 100%");
-                var card = _api.GetCard($"https://api.scryfall.com/cards/{u.Id}?format=json&pretty=true").Result;
+                var card = _api.GetCard(u.Id).Result;
                 cards.Add(card);
                 i++;
             }

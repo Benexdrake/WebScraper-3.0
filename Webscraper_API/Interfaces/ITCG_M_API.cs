@@ -1,5 +1,5 @@
 ﻿using Webscraper_API.Scraper.TCG_Magic.Model;
-using Webscraper_API.Scraper.TCG_Magic.Old;
+using Webscraper_API.Scraper.TCG_Magic.Model.DbModel;
 
 namespace Webscraper_API.Interfaces
 {
@@ -7,7 +7,6 @@ namespace Webscraper_API.Interfaces
     {
         Task<CardUrl[]> GetAllCardBySetUrl(string setUrl);
         Task<string[]> GetAllSetUrls();
-        Task<Set> GetSet(string name);
-        Task<Card> GetCard(string url);
+        Task<Card> GetCard(string id);
     }
 }

@@ -21,7 +21,6 @@ global using Webscraper_API.Interfaces;
 
 
 global using HtmlAgilityPack;
-global using OpenQA.Selenium;
 global using OpenQA.Selenium.Firefox;
 
 global using Serilog;
