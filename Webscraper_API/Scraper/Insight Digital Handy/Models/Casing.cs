@@ -2,13 +2,12 @@
 {
     public class Casing
     {
-        public int Id { get; set; }
-        public string CaseMaterial { get; set; }
-        public string CaseFormatHWD { get; set; }
-        public string DegreeOfProtection { get; set; }
-        public string ProtectionAgainst { get; set; }
-        public string Weight { get; set; }
-        public string Color { get; set; }
+        public string CaseMaterial { get; set; } = string.Empty;
+        public string CaseFormatHWD { get; set; } = string.Empty;
+        public string DegreeOfProtection { get; set; } = string.Empty;
+        public string ProtectionAgainst { get; set; } = string.Empty;
+        public string Weight { get; set; } = string.Empty;
+        public string Color { get; set; } = string.Empty;
 
     }
 

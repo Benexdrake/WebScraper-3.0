@@ -4,6 +4,6 @@ namespace Webscraper_API.Interfaces
 {
     public interface IPokemon_API
     {
-        Task<List<Pokemon>> GetPokemonByIDAsync(string id, HtmlDocument doc);
+        Task<List<Pokemon>> GetPokemonByIDAsync(int nr);
     }
 }

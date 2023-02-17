@@ -2,16 +2,15 @@
 {
     public class Camera
     {
-        public int Id { get; set; }
-        public string CameraType { get; set; }
-        public string Resolution { get; set; }
-        public string Sensor { get; set; }
-        public string Cover { get; set; }
-        public string ImageStabilizer { get; set; }
-        public string DigitalZoom { get; set; }
-        public string OpticalZoom { get; set; }
-        public string VideoResolution { get; set; }
-        public string RecordingSpeed { get; set; }
-        public string FlashPhotoLight { get; set; }
+        public string CameraType { get; set; } = string.Empty;
+        public string Resolution { get; set; } = string.Empty;
+        public string Sensor { get; set; } = string.Empty;
+        public string Cover { get; set; } = string.Empty;
+        public string ImageStabilizer { get; set; } = string.Empty;
+        public string DigitalZoom { get; set; } = string.Empty;
+        public string OpticalZoom { get; set; } = string.Empty;
+        public string VideoResolution { get; set; } = string.Empty;
+        public string RecordingSpeed { get; set; } = string.Empty;
+        public string FlashPhotoLight { get; set; } = string.Empty;
     }
 }

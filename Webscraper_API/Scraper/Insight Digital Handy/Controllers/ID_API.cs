@@ -16,6 +16,7 @@ namespace Webscraper_API.Scraper.Insight_Digital_Handy.Controllers
             _browser = service.GetRequiredService<Browser>();
         }
 
+        public string Message { get; set; }
         public async Task<string[]> GetHandyUrls()
         {
             var doc = _browser.GetPageDocument("https://www.inside-digital.de/handy-bestenliste/inside-digital-ranking/1", 1000).Result;
@@ -44,6 +45,7 @@ namespace Webscraper_API.Scraper.Insight_Digital_Handy.Controllers
                             urls.Add(u.OuterHtml.Split('"')[1]);
                         }
                     }
+                    Message = $"{Helper.Percent(i,n)}% / 100%";
                 }
                 return urls.ToArray();
             }
@@ -300,10 +302,7 @@ namespace Webscraper_API.Scraper.Insight_Digital_Handy.Controllers
                         }
                     }
                 }
-
-                
                 var urlSplit = url.Split('/');
-
 
                 handy.Id = urlSplit[4];
                 handy.Url = url;

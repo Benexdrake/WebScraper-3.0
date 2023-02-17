@@ -2,15 +2,14 @@
 {
     public class Display
     {
-        public int Id { get; set; }
-        public string PixelDensity { get; set; }
-        public string ResolutionWH { get; set; }
-        public string DiagonalInches { get; set; }
-        public string DiagonalMm { get; set; }
-        public string Type { get; set; }
-        public string RefreshRate { get; set; }
-        public string Material { get; set; }
-        public string DisplayFormat { get; set; }
+        public string PixelDensity { get; set; } = string.Empty;
+        public string ResolutionWH { get; set; } = string.Empty;
+        public string DiagonalInches { get; set; } = string.Empty;
+        public string DiagonalMm { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string RefreshRate { get; set; } = string.Empty;
+        public string Material { get; set; } = string.Empty;
+        public string DisplayFormat { get; set; } = string.Empty;
     }
 
 }

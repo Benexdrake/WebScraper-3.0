@@ -1,5 +1,4 @@
 ﻿using Webscraper_API.Scraper.TCG_Magic.Model;
-using Webscraper_API.Scraper.TCG_Magic.Model.DbModel;
 
 namespace Webscraper_API.Interfaces
 {

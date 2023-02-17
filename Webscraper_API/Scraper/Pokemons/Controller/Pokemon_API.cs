@@ -8,19 +8,26 @@ namespace Webscraper_API.Scraper.Pokemons.Controller
 {
     public class Pokemon_API : IPokemon_API
     {
-        public async Task<List<Pokemon>> GetPokemonByIDAsync(string id, HtmlDocument doc)
+        private readonly Browser _browser;
+        public Pokemon_API(IServiceProvider service)
         {
+            _browser = service.GetRequiredService<Browser>();
+            _browser.FirefoxDebug();
+        }
+        public async Task<List<Pokemon>> GetPokemonByIDAsync(int nr)
+        {
+            var doc = _browser.GetPageDocument($"https://www.pokemon.com/de/pokedex/{nr}",2000).Result;
             var main = FindNodesByDocument(doc, "div", "class", "pokedex").Result.FirstOrDefault();
             if (main is not null)
             {
                 var details = FindNodesByNode(main, "section", "class", "pokemon-details").Result.FirstOrDefault();
                 if (details is not null)
-                    return GetPokemons(main, id);
+                    return GetPokemons(main, nr);
             }
             return null;
         }
 
-        private List<Pokemon> GetPokemons(HtmlNode node, string id, int index = 0)
+        private List<Pokemon> GetPokemons(HtmlNode node, int nr, int index = 0)
         {
             MainBuilder b = new MainBuilder();
 
@@ -49,7 +56,7 @@ namespace Webscraper_API.Scraper.Pokemons.Controller
             {
                 if (i > 0)
                     isVersion = true;
-                string _id = $"{id}-{i + 1}";
+                string _id = $"{nr}-{i + 1}";
 
                 var skills = GetPokemonSkills(abilityInfos[i]);
                 var statusList = FindNodesByNode(status[i], "li", "class", "meter").Result;
@@ -57,9 +64,9 @@ namespace Webscraper_API.Scraper.Pokemons.Controller
                 .p
                 .NewPokemon()
                 .ID(_id)
-                .Nr(int.Parse(id))
+                .Nr(nr)
                 .Name(GetPokemonName(images[i], node, i))
-                .Url($"https://www.pokemon.com/de/pokedex/{id}")
+                .Url($"https://www.pokemon.com/de/pokedex/{nr}")
                 .Image(GetPokemonImageUrl(images[i], i))
                 .SkillName(GetSkillName(skills))
                 .SkillDescription(eGetSkillDescription(skills))

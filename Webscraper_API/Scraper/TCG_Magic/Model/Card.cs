@@ -1,4 +1,4 @@
-﻿namespace Webscraper_API.Scraper.TCG_Magic.Model.JsonModel;
+﻿namespace Webscraper_API.Scraper.TCG_Magic.Model;
 
 public class Card
 {

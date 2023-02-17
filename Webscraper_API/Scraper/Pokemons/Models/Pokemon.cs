@@ -2,20 +2,20 @@
 {
     public class Pokemon
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public int Nr { get; set; }
-        public string Url { get; set; }
-        public string ImageUrl { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Size { get; set; }
-        public string Weight { get; set; }
-        public string Category { get; set; }
-        public string SkillName { get; set; }
-        public string SkillDescription { get; set; }
-        public string Sex { get; set; }
-        public string Type { get; set; }
-        public string Weakness { get; set; }
+        public string Url { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Size { get; set; } = string.Empty;
+        public string Weight { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
+        public string SkillName { get; set; } = string.Empty;
+        public string SkillDescription { get; set; } = string.Empty;
+        public string Sex { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string Weakness { get; set; } = string.Empty;
         public int KP { get; set; }
         public int Attack { get; set; }
         public int Defensiv { get; set; }

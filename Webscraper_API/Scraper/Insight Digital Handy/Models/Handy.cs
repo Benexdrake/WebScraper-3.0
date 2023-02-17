@@ -2,17 +2,17 @@
 
 public class Handy
 {
-    public string Id { get; set; }
-    public string Manufacturer { get; set; }
-    public string Accessible { get; set; }
-    public string LaunchGermany { get; set; }
-    public string OS { get; set; }
-    public string UI { get; set; }
-    public string Variants { get; set; }
-    public string Prices { get; set; }
-    public string Model { get; set; }
-    public string Url { get; set; }
-    public string ImageUrl { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string Manufacturer { get; set; } = string.Empty;
+    public string Accessible { get; set; } = string.Empty;
+    public string LaunchGermany { get; set; } = string.Empty;
+    public string OS { get; set; } = string.Empty;
+    public string UI { get; set; } = string.Empty;
+    public string Variants { get; set; } = string.Empty;
+    public string Prices { get; set; } = string.Empty;
+    public string Model { get; set; } = string.Empty;
+    public string Url { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
     public Display Display { get; set; }
     public Casing Casing { get; set; }
     public Hardware Hardware { get; set; }

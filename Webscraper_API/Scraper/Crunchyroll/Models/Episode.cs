@@ -9,6 +9,7 @@ namespace Webscraper_API.Scraper.Crunchyroll.Models
     public class Episode
     {
         public string Id { get; set; }
+        public int EpisodeNr { get; set; }
         public string SeasonName { get; set; }
         public string Title { get; set; }
         public string Url { get; set; }

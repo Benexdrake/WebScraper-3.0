@@ -2,9 +2,8 @@
 {
     public class Miscellaneous
     {
-        public int Id { get; set; }
-        public string Particularities { get; set; }
-        public string ScopeOfDelivery { get; set; }
+        public string Particularities { get; set; } = string.Empty;
+        public string ScopeOfDelivery { get; set; } = string.Empty;
     }
 
 }

@@ -19,7 +19,6 @@ public class CR_API : ICR_API
     #region Update: Full and Simulcast
     public async Task<string[]> GetAllAnimeUrlsAsync()
     {
-
         // New with other Site
         List<string> urls = new();
         Message = "0%/100%";
@@ -72,48 +71,86 @@ public class CR_API : ICR_API
         return dis.ToArray();
     }
 
-    public async Task<string[]> GetSimulcastUpdateUrlsAsync()
+    public async Task<string[]> GetWeeklyUpdateAsync()
     {
-        string url = "https://www.crunchyroll.com/de/simulcasts/seasons";
+        // New with other Site
         List<string> urls = new();
+        Message = "0%/100%";
+        string url = "https://www.crunchyroll.com/de/videos/new";
         _browser.WebDriver.Navigate().GoToUrl(url);
+        await Task.Delay(5000);
 
-        var doc = _browser.GetPageDocument(url, 5000).Result;
+        int end = 5000;
 
-        var main = Helper.FindNodesByDocument(doc, "div", "class", "erc-browse-collection").Result.FirstOrDefault();
 
-        var browsecards = Helper.FindNodesByNode(main, "div", "class", "browse-card-static--UqkrO").Result;
-
-        foreach (var item in browsecards)
+        // browsen bis nach unten in gaaanz schnell
+        for (int i = 0; i < end; i += 100)
         {
-            var split = item.InnerHtml.Split('"');
-
-            var u = "https://www.crunchyroll.com" + split[7];
-            urls.Add(u);
+            var percent = Helper.Percent(i, end);
+            Message = $"URLs found: {percent}%/100%";
+            Log.Logger.Information(Message);
+            _browser.WebDriver.ExecuteScript($"window.scrollBy(0, {i});");
+            await Task.Delay(1000);
         }
-        return urls.ToArray();
+
+        var page = _browser.WebDriver.PageSource;
+
+        var doc = new HtmlDocument();
+        doc.LoadHtml(page);
+
+        await Task.Delay(5000);
+
+        var main = Helper.FindNodesByDocument(doc, "div", "class", "content-wrapper--MF5LS").Result.FirstOrDefault();
+
+        if (main is not null)
+        {
+            var collection = Helper.FindNodesByDocument(doc, "div", "class", "erc-browse-cards-collecti").Result;
+            // Collection == 3
+            if(collection.Count > 2)
+            {
+                collection.Remove(collection.LastOrDefault());
+            }
+            foreach (var c in collection)
+            {
+                var browseCards = Helper.FindNodesByNode(c, "div", "class", "browse-card-static--UqkrO").Result;
+                foreach (var card in browseCards)
+                {
+                    var split = card.InnerHtml.Split('"');
+
+                    var u = "https://www.crunchyroll.com" + split[7];
+                    urls.Add(u);
+                }
+            }
+        }
+
+        Message = $"URLs found: 100%/100%";
+        var dis = urls.Distinct().ToList();
+        return dis.ToArray();
     }
 
     public async Task<string[]> GetDailyUpdateAsync()
     {
         string url = "https://www.crunchyroll.com/de/videos/new";
         List<string> urls = new();
-        _browser.WebDriver.Navigate().GoToUrl(url);
+        //_browser.WebDriver.Navigate().GoToUrl(url);
 
-        var doc = _browser.GetPageDocument(url, 5000).Result;
+        var doc = _browser.GetPageDocument(url, 1000).Result;
 
         var main = Helper.FindNodesByDocument(doc, "div", "class", "browse-collection-wrapper").Result.FirstOrDefault();
-
-        var browsecards = Helper.FindNodesByNode(main, "div", "class", "browse-card-static--UqkrO").Result;
-
-        foreach (var item in browsecards)
+        if(main is not null)
         {
-            var split = item.InnerHtml.Split('"');
+            var browsecards = Helper.FindNodesByNode(main, "div", "class", "browse-card-static--UqkrO").Result;
 
-            var u = "https://www.crunchyroll.com" + split[7];
-            urls.Add(u);
+            foreach (var item in browsecards)
+            {
+                var split = item.InnerHtml.Split('"');
+
+                var u = "https://www.crunchyroll.com" + split[7];
+                urls.Add(u);
+            }
+            return urls.ToArray();
         }
-        return urls.ToArray();
+        return new string[0];
     }
     #endregion
 
@@ -182,8 +219,8 @@ public class CR_API : ICR_API
         if (cookie is not null)
         {
             cookie.Click();
+            await Task.Delay(5000);
         }
-        await Task.Delay(5000);
 
         // while schleife bis div hat state-disabled für <
         while (true)
@@ -225,19 +262,17 @@ public class CR_API : ICR_API
             episodesList.AddRange(episodes);
             //Console.WriteLine(episodesList.Count);
 
-            var next = _browser.WebDriver.FindElements(By.ClassName("cta-wrapper"))[1];
-
-
-            if(next is not null)
+            var next = _browser.WebDriver.FindElements(By.ClassName("cta-wrapper"));
+            
+            if (next.Count > 0)
             {
-                var b = next.GetAttribute("class");
+                var b = next[1].GetAttribute("class");
                 if (b.Contains("state-disabled"))
                     break;
-                else
-                {
-                    next.Click();
-                }
+                next[1].Click();
             }
+            else
+                break;
         }
         return episodesList.ToArray();
     }
@@ -294,7 +329,7 @@ public class CR_API : ICR_API
 
             var seasonName = Helper.FindNodesByNode(main, "h4", "class", "text--gq6o- text--is-semibold--AHOYN text--is-xl---ywR-").Result.FirstOrDefault();
             //var seasonName = Helper.FindNodesByNode(main, "h4", "class", "text--gq6o- text--is-semibold--AHOYN text--is-xl---ywR-").Result.FirstOrDefault();
-
+            int i = 1;
             foreach (var card in cards)
             {
                 var episode = new Episode();
@@ -308,6 +343,7 @@ public class CR_API : ICR_API
                 var id = split[7].Split("/")[3];
 
                 episode.Id = id;
+                episode.EpisodeNr= i;
                 episode.AnimeId = animeId;
                 episode.Title = split[5];
                 episode.Url = "https://www.crunchyroll.com" + split[7];
@@ -319,6 +355,7 @@ public class CR_API : ICR_API
                 episode.Description= "";
 
                 episodeList.Add(episode);
+                i++;
             }
             return episodeList.ToArray();
         }

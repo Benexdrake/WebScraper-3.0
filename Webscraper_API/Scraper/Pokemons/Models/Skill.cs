@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Webscraper_API.Scraper.Pokemons.Models
+﻿namespace Webscraper_API.Scraper.Pokemons.Models;
+public class Skill
 {
-    public class Skill
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-    }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 }

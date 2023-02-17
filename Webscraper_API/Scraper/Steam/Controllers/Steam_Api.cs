@@ -106,7 +106,7 @@ public class Steam_Api : ISteam_Api
             var highlightImageList = Helper.FindNodesByNode(highlightBlock, "div", "class", "highlight_player_item highlight_screenshot").Result;
 
             var videoList = new List<Video>();
-            var imageList = new List<Screenshot>();
+            var imageList = new List<string>();
             foreach (var m in highlightMovieList)
             {
                 var split = m.OuterHtml.Split('"'); // 15 video 17 thumbnail
@@ -115,7 +115,7 @@ public class Steam_Api : ISteam_Api
             foreach(var i in highlightImageList)
             {
                 var split = i.OuterHtml.Split('"'); // Image Url 15
-                imageList.Add(new Screenshot() { S = split[15].Split('?')[0] });
+                imageList.Add(split[15].Split('?')[0]);
                 Console.WriteLine();
             }
             game.GameplayVideos = videoList.ToArray();
@@ -135,10 +135,10 @@ public class Steam_Api : ISteam_Api
 
             // Tags
             var tagsnodes = Helper.FindNodesByNode(gameMediaSummary, "a", "class", "app_tag").Result;
-            var tags = new List<Tag>();
+            var tags = new List<string>();
             foreach (var tag in tagsnodes)
             {
-                tags.Add(new Tag() { T = tag.InnerText.Trim() });
+                tags.Add(tag.InnerText.Trim());
             }
             game.Tags = tags.ToArray();
 
@@ -200,10 +200,10 @@ public class Steam_Api : ISteam_Api
             // Category Block
             var categoryBlock = Helper.FindNodesByNode(main, "div", "class", "game_area_features_list").Result.FirstOrDefault();
             var gameAreaDetailsSpecs = Helper.FindNodesByNode(categoryBlock, "a", "class", "game_area_details_specs_ctn").Result;
-            var detailSpecs = new List<Feature>();
+            var detailSpecs = new List<string>();
             foreach (var item in gameAreaDetailsSpecs)
             {
-                detailSpecs.Add(new() { F = item.InnerText.Trim()});
+                detailSpecs.Add(item.InnerText.Trim());
             }
             game.GameFeatures= detailSpecs.ToArray();
 
@@ -250,7 +250,6 @@ public class Steam_Api : ISteam_Api
                 var list = Helper.FindNodesByNode(sr, "li", "", "").Result;
                 foreach (var item in list)
                 {
-                  
                     pc.Information = list[0].InnerText.Trim();
                     if (item.InnerHtml.Contains("Betriebssystem"))
                         pc.OS = item.InnerText.Trim();

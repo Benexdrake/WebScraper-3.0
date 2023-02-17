@@ -30,7 +30,7 @@ public class Dota_Api : IDota_Api
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                var result = JsonConvert.DeserializeObject<Rootobject>(responseBody);
+                var result = JsonConvert.DeserializeObject< Rootobject >(responseBody);
 
                 foreach (var item in result.result.data.heroes)
                 {
@@ -56,13 +56,22 @@ public class Dota_Api : IDota_Api
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                var result = JsonConvert.DeserializeObject<Rootobject>(responseBody).result;
+                var result = JsonConvert.DeserializeObject< Rootobject >(responseBody).result;
 
                 //result.data.heroes[0].imageUrl = $"https://cdn.cloudflare.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/{result.data.heroes[0].name_loc.ToLower().Replace(" ","_")}.png";
                 //result.data.heroes[0].videoUrl = $"https://cdn.cloudflare.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/{result.data.heroes[0].name_loc.ToLower().Replace(" ", "_")}.webm";
 
-                return result.data.heroes.FirstOrDefault();
+                return Convert(result.data.heroes.FirstOrDefault()).Result;
             }
         }
+    }
+
+    private async Task<Hero> Convert(Hero h)
+    {
+        var nh = new Hero();
+
+
+
+        return nh;
     }
 }
