@@ -12,7 +12,6 @@ namespace Webscraper_API.Scraper.Pokemons.Controller
         public Pokemon_API(IServiceProvider service)
         {
             _browser = service.GetRequiredService<Browser>();
-            _browser.FirefoxDebug();
         }
         public async Task<List<Pokemon>> GetPokemonByIDAsync(int nr)
         {

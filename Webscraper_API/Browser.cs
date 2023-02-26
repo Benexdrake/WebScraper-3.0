@@ -6,12 +6,8 @@ namespace Webscraper_API;
 public class Browser
 {
     public WebDriver WebDriver { get; set; }
-    public Browser()
-    {
-        WebDriver = Firefox();
-    }
 
-    private FirefoxDriver Firefox()
+    public FirefoxDriver Firefox()
     {
         FirefoxOptions options = new FirefoxOptions();
         options.AddArgument("--headless");
@@ -26,13 +22,16 @@ public class Browser
         return new FirefoxDriver(FService, options);
     }
 
-    public void FirefoxDebug()
+    public FirefoxDriver FirefoxDebug()
     {
-        WebDriver = new FirefoxDriver();
+        return new FirefoxDriver();
     }
 
     public async Task<HtmlDocument> GetPageDocument(string url, int delay)
     {
+        if (WebDriver is null)
+            WebDriver = Firefox();
+
         WebDriver.Navigate().GoToUrl(url);
 
         var hondaButton = WebDriver.FindElements(By.ClassName("fit-vehicle-list-view-text")).FirstOrDefault();
@@ -55,7 +54,6 @@ public class Browser
         await Task.Delay(delay);
 
         string page = ReplaceString(WebDriver.PageSource);
-        //string page = WebDriver.PageSource;
         var doc = new HtmlDocument();
         doc.LoadHtml(page);
         return doc;

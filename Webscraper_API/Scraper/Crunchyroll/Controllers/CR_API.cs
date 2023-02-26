@@ -14,11 +14,13 @@ public class CR_API : ICR_API
     public CR_API(IServiceProvider service)
     {
         _browser = service.GetRequiredService<Browser>();
+        //_browser.WebDriver = _browser.FirefoxDebug();
     }
 
     #region Update: Full and Simulcast
     public async Task<string[]> GetAllAnimeUrlsAsync()
     {
+        CheckBrowser();
         // New with other Site
         List<string> urls = new();
         Message = "0%/100%";
@@ -73,6 +75,8 @@ public class CR_API : ICR_API
 
     public async Task<string[]> GetWeeklyUpdateAsync()
     {
+        CheckBrowser();
+
         // New with other Site
         List<string> urls = new();
         Message = "0%/100%";
@@ -132,7 +136,6 @@ public class CR_API : ICR_API
     {
         string url = "https://www.crunchyroll.com/de/videos/new";
         List<string> urls = new();
-        //_browser.WebDriver.Navigate().GoToUrl(url);
 
         var doc = _browser.GetPageDocument(url, 1000).Result;
 
@@ -260,7 +263,7 @@ public class CR_API : ICR_API
 
             var episodes = GetEpisodesperSeason().Result;
             episodesList.AddRange(episodes);
-            //Console.WriteLine(episodesList.Count);
+            
 
             var next = _browser.WebDriver.FindElements(By.ClassName("cta-wrapper"));
             
@@ -304,6 +307,8 @@ public class CR_API : ICR_API
         if (desc is not null)
         {
             episode.Description = desc.InnerText;
+            if(desc.InnerText == "")
+                Console.WriteLine();
             if (string.IsNullOrWhiteSpace(desc.InnerText))
                 episode.Description = "-";
         }
@@ -448,6 +453,12 @@ public class CR_API : ICR_API
             return 0;
         }
         return 0;
+    }
+
+    private void CheckBrowser()
+    {
+        if (_browser.WebDriver is null)
+            _browser.WebDriver = _browser.Firefox();
     }
     #endregion
 }
