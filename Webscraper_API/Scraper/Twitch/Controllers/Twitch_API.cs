@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
-using Webscraper_API.Scraper.Twitch.Models;
+using Webscraper.API.Interfaces;
 
-namespace Webscraper_API.Scraper.Twitch.Controllers;
+namespace Webscraper.API.Scraper.Twitch.Controllers;
 
 public class Twitch_API : ITwitch_API
 {
@@ -11,7 +11,7 @@ public class Twitch_API : ITwitch_API
         _browser = service.GetRequiredService<Browser>();
     }
 
-    public async Task<User> GetTwitchProfil(string url)
+    public async Task<TwitchUser> GetTwitchProfil(string url)
     {
         var split = url.Split("/");
 
@@ -20,8 +20,8 @@ public class Twitch_API : ITwitch_API
         var main = Helper.FindNodesByDocument(doc, "div", "class", "Layout-sc-1xcs6mc-0 bSoSIm").Result.FirstOrDefault();
         if (main is not null)
         {
-            User user = new User();
-            List<Game> gameList = new();
+            var user = new TwitchUser();
+            List<TwitchGame> gameList = new();
 
             // Username
             var username = Helper.FindNodesByDocument(doc, "div", "class", "Layout-sc-1xcs6mc-0 dVelak").Result.FirstOrDefault();
@@ -36,7 +36,7 @@ public class Twitch_API : ITwitch_API
 
             string banner = string.Empty;
 
-            if(bannerUrl is not null)
+            if (bannerUrl is not null)
             {
                 var background = Helper.FindNodesByNode(bannerUrl, "div", "style", "background-image").Result.FirstOrDefault();
                 var bs = background.OuterHtml.Split("/");
@@ -51,7 +51,7 @@ public class Twitch_API : ITwitch_API
             // Description div class panel-description list
             var descriptionBlock = Helper.FindNodesByDocument(doc, "div", "class", "Layout-sc-1xcs6mc-0 ScTypeset-sc-i73f0c-0 dRZPzM flfwOo tw-typeset").Result.FirstOrDefault();
             string d = string.Empty;
-            if(descriptionBlock is not null)
+            if (descriptionBlock is not null)
             {
 
                 var desc = Helper.FindNodesByNode(descriptionBlock, "p", "", "").Result;
@@ -77,13 +77,13 @@ public class Twitch_API : ITwitch_API
                 doc.LoadHtml(page);
                 // Last streamed Games
                 var block = Helper.FindNodesByDocument(doc, "div", "class", "ScTower-sc-1sjzzes-0 jOMJnS tw-tower").Result.FirstOrDefault();
-                if(block is not null)
+                if (block is not null)
                 {
                     var games = Helper.FindNodesByNode(block, "div", "class", "InjectLayout-sc-1i43xsx-0 eptOJT").Result;
 
                     foreach (var g in games)
                     {
-                        var game = new Game();
+                        var game = new TwitchGame();
                         var id = Helper.FindNodesByNode(g, "a", "class", "ScCoreLink-sc-16kq0mq-0 jSrrlW game-card__link tw-link").Result.FirstOrDefault();
                         var idsplit = id.OuterHtml.Split('"')[7].Split("=");
                         var image = Helper.FindNodesByNode(g, "img", "class", "tw-image").Result.FirstOrDefault();

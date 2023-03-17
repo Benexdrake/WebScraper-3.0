@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webscraper_API", "Webscraper_API\Webscraper_API.csproj", "{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webscraper.API", "Webscraper_API\Webscraper.API.csproj", "{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webscraper.Models", "Webscraper.Models\Webscraper.Models.csproj", "{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webscraper.Tests", "Webscraper.Tests\Webscraper.Tests.csproj", "{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

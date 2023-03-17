@@ -1,6 +1,4 @@
-﻿using Webscraper_API.Scraper.Pokemons.Models;
-
-namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface IPokemon_API
     {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Webscraper.API.Interfaces;
 
-namespace Webscraper_API.Scraper.IMDB.Controllers
+namespace Webscraper.API.Scraper.IMDB.Controllers
 {
     public class IMDb_API : IIMDb_API
     {
@@ -15,7 +15,7 @@ namespace Webscraper_API.Scraper.IMDB.Controllers
         {
             var doc = _browser.GetPageDocument(url, 1000).Result;
 
-            BuildModels.Builder b = new BuildModels.Builder();
+            var b = new Builder();
 
             var main = FindNodesByDocument(doc, "section", "class", "ipc-page-section").Result.ToList();
 
@@ -110,20 +110,20 @@ namespace Webscraper_API.Scraper.IMDB.Controllers
             List<string> favUrls = new();
             var doc = _browser.GetPageDocument(url, 1000).Result;
 
-            var counterNode = Helper.FindNodesByDocument(doc,"div","class", "desc lister-total-num-results").Result.FirstOrDefault();
-            if(counterNode is not null)
+            var counterNode = Helper.FindNodesByDocument(doc, "div", "class", "desc lister-total-num-results").Result.FirstOrDefault();
+            if (counterNode is not null)
             {
                 var counter = int.Parse(counterNode.InnerText.Replace("titles", " ").Trim());
                 if (counter % 100 == 0)
                     maxSides = counter / 100;
                 else
-                    maxSides = (counter / 100) + 1;
+                    maxSides = counter / 100 + 1;
 
                 for (int i = 1; i <= maxSides; i++)
                 {
                     url = $"https://www.imdb.com/list/{id}/?sort=list_order,asc&st_dt=&mode=simple&page={i}&ref_=ttls_vw_smp";
                     var urls = GetUrlsFromSide(url).Result;
-                    if(urls is not null)
+                    if (urls is not null)
                         favUrls.AddRange(urls);
                 }
                 return favUrls.ToArray();
@@ -135,7 +135,7 @@ namespace Webscraper_API.Scraper.IMDB.Controllers
         {
             var doc = _browser.GetPageDocument(url, 1000).Result;
             var main = Helper.FindNodesByDocument(doc, "div", "class", "lister-list").Result.FirstOrDefault();
-            if(main is not null)
+            if (main is not null)
             {
                 List<string> urls = new();
                 var listNodes = Helper.FindNodesByNode(main, "div", "class", "lister-item mode-simple").Result;
@@ -156,7 +156,7 @@ namespace Webscraper_API.Scraper.IMDB.Controllers
         public async Task<List<string>> GetMovieTop250Urls()
         {
             string url = "https://www.imdb.com/chart/top/";
-            
+
             var doc = _browser.GetPageDocument(url, 1000).Result;
             List<string> movieUrls = new List<string>();
 
@@ -177,7 +177,7 @@ namespace Webscraper_API.Scraper.IMDB.Controllers
             return await Task.FromResult(movieUrls);
         }
         #endregion
-       
+
         #region Get Region
         private string GetId(string url)
         {
@@ -251,7 +251,7 @@ namespace Webscraper_API.Scraper.IMDB.Controllers
         {
             var r = FindNodesByNode(node, "div", "data-testid", "hero-rating-bar__aggregate-rating__score").Result.FirstOrDefault();
             if (r != null)
-                return Double.Parse(r.InnerText.Split('/')[0]);
+                return double.Parse(r.InnerText.Split('/')[0]);
             return 0;
         }
 

@@ -1,13 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using Webscraper_API.Scraper.TCG_Magic.Model;
+using Webscraper.API.Interfaces;
 
-namespace Webscraper_API.Scraper.TCG_Magic.Controller
+namespace Webscraper.API.Scraper.TCG_Magic.Controller
 {
     public class TCG_M_API : ITCG_M_API
     {

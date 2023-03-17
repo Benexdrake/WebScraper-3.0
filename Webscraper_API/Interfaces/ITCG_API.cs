@@ -1,6 +1,4 @@
-﻿using Webscraper_API.Scraper.TCG_Pokemon.Models;
-
-namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface ITCG_API
     {

@@ -1,10 +1,13 @@
-﻿using Webscraper_API.Scraper.Steam.Models;
-
-namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface ISteam_Api
     {
+        string Message { get; set; }
+        Task<App[]> GetAllGameIds();
         Task<string[]> GetGameUrls(int category);
-        Task<Game> GetSteamGame(string url);
+        Task<SteamGame> GetSteamGame(string url);
+
+        Task<string[]> GetGameUrlsFromWishlist(string url);
+        Task<SteamUser> GetUser(string url);
     }
 }

@@ -1,6 +1,4 @@
-﻿using Webscraper_API.Scraper.Dota2.Models;
-
-namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface IDota_Api
     {
