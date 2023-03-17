@@ -1,4 +1,6 @@
-﻿namespace Webscraper_API.Scraper.OnePlus.Controllers;
+﻿using Webscraper.API.Interfaces;
+
+namespace Webscraper.API.Scraper.OnePlus.Controllers;
 
 public class OP_API : IOP_API
 {

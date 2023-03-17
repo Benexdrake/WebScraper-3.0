@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Webscraper_API;
+namespace Webscraper.API;
 public class Browser
 {
     public WebDriver WebDriver { get; set; }
@@ -41,10 +41,10 @@ public class Browser
             hondaButton.Click();
         }
 
-        if(url.Contains("store.steampowered.com"))
+        if (url.Contains("store.steampowered.com"))
         {
             var change = WebDriver.FindElements(By.XPath("/html/body/div[1]/div[7]/div[6]/div/div[2]/div/div[1]/div[2]/select[3]/option[1]")).FirstOrDefault();
-            if(change is not null)
+            if (change is not null)
             {
                 change.Click();
                 var button = WebDriver.FindElement(By.ClassName("btnv6_blue_hoverfade"));

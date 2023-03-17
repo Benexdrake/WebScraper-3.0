@@ -1,11 +1,8 @@
-﻿using Webscraper_API.Scraper.Insight_Digital_Handy.Models;
+﻿namespace Webscraper.API.Interfaces;
 
-namespace Webscraper_API.Interfaces
+public interface IID_API
 {
-    public interface IID_API
-    {
-        string Message { get; set; }
-        Task<Handy> GetHandyAsync(string url);
-        Task<string[]> GetHandyUrls();
-    }
+    string Message { get; set; }
+    Task<Handy> GetHandyAsync(string url);
+    Task<string[]> GetHandyUrls();
 }

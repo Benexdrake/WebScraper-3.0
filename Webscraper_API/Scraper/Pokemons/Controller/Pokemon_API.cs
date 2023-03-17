@@ -1,10 +1,6 @@
-﻿using HtmlAgilityPack;
-using System.Xml.Linq;
-using Webscraper_API.Interfaces;
-using Webscraper_API.Scraper.Pokemons.Builder;
-using Webscraper_API.Scraper.Pokemons.Models;
+﻿using Webscraper.API.Interfaces;
 
-namespace Webscraper_API.Scraper.Pokemons.Controller
+namespace Webscraper.API.Scraper.Pokemons.Controller
 {
     public class Pokemon_API : IPokemon_API
     {
@@ -15,7 +11,7 @@ namespace Webscraper_API.Scraper.Pokemons.Controller
         }
         public async Task<List<Pokemon>> GetPokemonByIDAsync(int nr)
         {
-            var doc = _browser.GetPageDocument($"https://www.pokemon.com/de/pokedex/{nr}",2000).Result;
+            var doc = _browser.GetPageDocument($"https://www.pokemon.com/de/pokedex/{nr}", 2000).Result;
             var main = FindNodesByDocument(doc, "div", "class", "pokedex").Result.FirstOrDefault();
             if (main is not null)
             {

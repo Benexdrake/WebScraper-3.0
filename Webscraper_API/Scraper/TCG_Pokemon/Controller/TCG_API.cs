@@ -1,14 +1,6 @@
-﻿using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Webscraper_API.Interfaces;
-using Webscraper_API.Scraper.TCG_Pokemon.Models;
+﻿using Webscraper.API.Interfaces;
 
-namespace Webscraper_API.Scraper.TCG_Pokemon.Controller
+namespace Webscraper.API.Scraper.TCG_Pokemon.Controller
 {
     public class TCG_API : ITCG_API
     {

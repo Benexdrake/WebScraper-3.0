@@ -1,9 +1,6 @@
-﻿
+﻿using Webscraper.Models.Crunchyroll.BuildModels;
 
-using OpenQA.Selenium;
-using System;
-
-namespace Webscraper_API.Scraper.Crunchyroll.Controllers;
+namespace Webscraper.API.Scraper.Crunchyroll.Controllers;
 
 public class CR_API : ICR_API
 {
@@ -32,11 +29,10 @@ public class CR_API : ICR_API
 
 
         // browsen bis nach unten in gaaanz schnell
-        for (int i = 0; i < end; i+=100)
+        for (int i = 0; i < end; i += 100)
         {
             var percent = Helper.Percent(i, end);
             Message = $"URLs found: {percent}%/100%";
-            Log.Logger.Information(Message);
             _browser.WebDriver.ExecuteScript($"window.scrollBy(0, {i});");
             await Task.Delay(1000);
         }
@@ -50,7 +46,7 @@ public class CR_API : ICR_API
 
         var main = Helper.FindNodesByDocument(doc, "div", "class", "content-wrapper--MF5LS").Result.FirstOrDefault();
 
-        if(main is not null)
+        if (main is not null)
         {
             var collection = Helper.FindNodesByDocument(doc, "div", "class", "erc-browse-cards-collecti").Result;
             // Collection == 3
@@ -67,7 +63,7 @@ public class CR_API : ICR_API
                 }
             }
         }
-       
+
         Message = $"URLs found: 100%/100%";
         var dis = urls.Distinct().ToList();
         return dis.ToArray();
@@ -110,7 +106,7 @@ public class CR_API : ICR_API
         {
             var collection = Helper.FindNodesByDocument(doc, "div", "class", "erc-browse-cards-collecti").Result;
             // Collection == 3
-            if(collection.Count > 2)
+            if (collection.Count > 2)
             {
                 collection.Remove(collection.LastOrDefault());
             }
@@ -140,7 +136,7 @@ public class CR_API : ICR_API
         var doc = _browser.GetPageDocument(url, 1000).Result;
 
         var main = Helper.FindNodesByDocument(doc, "div", "class", "browse-collection-wrapper").Result.FirstOrDefault();
-        if(main is not null)
+        if (main is not null)
         {
             var browsecards = Helper.FindNodesByNode(main, "div", "class", "browse-card-static--UqkrO").Result;
 
@@ -160,7 +156,7 @@ public class CR_API : ICR_API
     public async Task<Anime> GetAnimeByUrlAsync(string url, int time)
     {
         var doc = _browser.GetPageDocument(url, time).Result;
-        var builder = new BuildModels.Builder();
+        var builder = new CR_Builder();
 
         var main = Helper.FindNodesByDocument(doc, "div", "class", "erc-series-hero").Result.FirstOrDefault();
 
@@ -187,12 +183,12 @@ public class CR_API : ICR_API
     public async Task<Anime_Episodes> GetAnimewithEpisodes(string url, int time)
     {
         var doc = _browser.GetPageDocument(url, time).Result;
-        var builder = new BuildModels.Builder();
+        var builder = new CR_Builder();
 
         var main = Helper.FindNodesByDocument(doc, "div", "class", "erc-series-hero").Result.FirstOrDefault();
 
         if (main is not null)
-        {  
+        {
             var episodes = GetEpisodesAsync().Result.ToList();
 
             var anime = builder
@@ -246,7 +242,7 @@ public class CR_API : ICR_API
 
         // while schleife bis div hat state-disabled für >
 
-        while(true)
+        while (true)
         {
             await Task.Delay(1200);
 
@@ -263,10 +259,10 @@ public class CR_API : ICR_API
 
             var episodes = GetEpisodesperSeason().Result;
             episodesList.AddRange(episodes);
-            
+
 
             var next = _browser.WebDriver.FindElements(By.ClassName("cta-wrapper"));
-            
+
             if (next.Count > 0)
             {
                 var b = next[1].GetAttribute("class");
@@ -291,7 +287,7 @@ public class CR_API : ICR_API
             return episode;
 
         var date = Helper.FindNodesByNode(main, "p", "class", "text--gq6o- text--is-m--pqiL- release-date").Result.FirstOrDefault();
-        if(date is not null)
+        if (date is not null)
         {
             var d = date.InnerHtml.Replace("Veröffentlicht am ", "");
             if (!string.IsNullOrWhiteSpace(d))
@@ -307,8 +303,6 @@ public class CR_API : ICR_API
         if (desc is not null)
         {
             episode.Description = desc.InnerText;
-            if(desc.InnerText == "")
-                Console.WriteLine();
             if (string.IsNullOrWhiteSpace(desc.InnerText))
                 episode.Description = "-";
         }
@@ -325,8 +319,8 @@ public class CR_API : ICR_API
         var doc = new HtmlDocument();
         doc.LoadHtml(page);
 
-        var main = Helper.FindNodesByDocument(doc,"div","class", "erc-season-with-navigation").Result.FirstOrDefault();
-        if(main is not null)
+        var main = Helper.FindNodesByDocument(doc, "div", "class", "erc-season-with-navigation").Result.FirstOrDefault();
+        if (main is not null)
         {
             var episodeList = new List<Episode>();
 
@@ -348,16 +342,16 @@ public class CR_API : ICR_API
                 var id = split[7].Split("/")[3];
 
                 episode.Id = id;
-                episode.EpisodeNr= i;
+                episode.EpisodeNr = i;
                 episode.AnimeId = animeId;
                 episode.Title = split[5];
                 episode.Url = "https://www.crunchyroll.com" + split[7];
-                episode.ImageUrl= split[37];
+                episode.ImageUrl = split[37];
                 episode.Time = time.InnerHtml;
                 episode.SeasonName = seasonName.InnerText;
                 // Not implented because, it has to load every Episode
                 episode.ReleaseDate = "";
-                episode.Description= "";
+                episode.Description = "";
 
                 episodeList.Add(episode);
                 i++;
@@ -402,7 +396,7 @@ public class CR_API : ICR_API
         return "No Description";
     }
 
-    
+
     private string GetTags(HtmlNode node)
     {
         var info = Helper.FindNodesByNode(node, "div", "class", "genres").Result.FirstOrDefault();
@@ -427,7 +421,7 @@ public class CR_API : ICR_API
         }
         return "";
     }
-   
+
     private string GetPublisher(HtmlNode node)
     {
         var details = Helper.FindNodesByNode(node, "div", "class", "show-details-table").Result.FirstOrDefault();

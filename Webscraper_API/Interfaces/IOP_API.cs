@@ -1,4 +1,4 @@
-﻿namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface IOP_API
     {

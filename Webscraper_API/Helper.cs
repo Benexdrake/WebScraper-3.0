@@ -1,4 +1,4 @@
-﻿namespace Webscraper_API;
+﻿namespace Webscraper.API;
 
 public class Helper
 {

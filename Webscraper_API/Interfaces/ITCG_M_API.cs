@@ -1,6 +1,4 @@
-﻿using Webscraper_API.Scraper.TCG_Magic.Model;
-
-namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface ITCG_M_API
     {

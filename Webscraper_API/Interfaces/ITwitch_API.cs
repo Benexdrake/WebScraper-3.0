@@ -1,9 +1,7 @@
-﻿using Webscraper_API.Scraper.Twitch.Models;
-
-namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface ITwitch_API
     {
-        Task<User> GetTwitchProfil(string url);
+        Task<TwitchUser> GetTwitchProfil(string url);
     }
 }

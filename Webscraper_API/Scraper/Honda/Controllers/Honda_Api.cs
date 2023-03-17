@@ -1,7 +1,6 @@
-﻿using Webscraper_API.Interfaces;
-using Webscraper_API.Scraper.Honda.Models;
+﻿using Webscraper.API.Interfaces;
 
-namespace Webscraper_API.Scraper.Honda.Controllers
+namespace Webscraper.API.Scraper.Honda.Controllers
 {
     public class Honda_Api : IHonda_Api
     {

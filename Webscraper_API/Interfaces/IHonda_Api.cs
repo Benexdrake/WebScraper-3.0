@@ -1,6 +1,4 @@
-﻿using Webscraper_API.Scraper.Honda.Models;
-
-namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface IHonda_Api
     {

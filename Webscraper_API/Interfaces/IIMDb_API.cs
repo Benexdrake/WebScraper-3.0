@@ -1,6 +1,4 @@
-﻿using Webscraper_API.Scraper.IMDB.Models;
-
-namespace Webscraper_API.Interfaces
+﻿namespace Webscraper.API.Interfaces
 {
     public interface IIMDb_API
     {
