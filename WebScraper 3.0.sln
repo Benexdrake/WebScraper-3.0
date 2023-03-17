@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webscraper.API", "Webscraper_API\Webscraper.API.csproj", "{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webscraper.Models", "Webscraper.Models\Webscraper.Models.csproj", "{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webscraper.Models", "Webscraper.Models\Webscraper.Models.csproj", "{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webscraper.Tests", "Webscraper.Tests\Webscraper.Tests.csproj", "{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webscraper.Tests", "Webscraper.Tests\Webscraper.Tests.csproj", "{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{DD1E3E1F-FB81-48DD-BD14-63309053145D}"
 EndProject
@@ -15,16 +13,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{C42F4DC0-D05
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B7CCC454-F0BE-443E-9B2F-A23F3443D9AD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webscraper.API", "Webscraper.API\Webscraper.API.csproj", "{02C2B04E-9120-4112-A85D-FCDE60AC89A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,14 +29,18 @@ Global
 		{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DD6C649-C0FB-4FF1-9D14-48A1FF781295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02C2B04E-9120-4112-A85D-FCDE60AC89A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02C2B04E-9120-4112-A85D-FCDE60AC89A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02C2B04E-9120-4112-A85D-FCDE60AC89A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02C2B04E-9120-4112-A85D-FCDE60AC89A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3EBD25B4-BA8B-4BDE-9310-7711525FCC20} = {C42F4DC0-D05B-4BB1-9ABC-D4C22409F54B}
 		{C9CAD819-7B5A-4311-9E4D-E64761B3DA3B} = {DD1E3E1F-FB81-48DD-BD14-63309053145D}
 		{7DD6C649-C0FB-4FF1-9D14-48A1FF781295} = {B7CCC454-F0BE-443E-9B2F-A23F3443D9AD}
+		{02C2B04E-9120-4112-A85D-FCDE60AC89A3} = {C42F4DC0-D05B-4BB1-9ABC-D4C22409F54B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FAD16D17-B4E0-4402-B0FD-E04091464334}
