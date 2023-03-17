@@ -21,4 +21,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Webscraper.Models\Webscraper.Models.csproj" />
+    <ProjectReference Include="..\Webscraper_API\Webscraper.API.csproj" />
+  </ItemGroup>
+
 </Project>
