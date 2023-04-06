@@ -4,6 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Benexdrake.$(AssemblyName)</PackageId>
+    <Title>Webscraper Models</Title>
+    <Description>This are the Models for the API or use it in other Projects</Description>
+    <RepositoryUrl>https://github.com/Benexdrake/WebScraper-3.0/tree/main/Webscraper.Models</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Webscraper</PackageTags>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
